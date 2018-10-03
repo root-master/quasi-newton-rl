@@ -13,7 +13,7 @@ class Trainer():
 				 controller=None,
 				 experience_memory=None,
 				 quasi_newton=None,
-				 batch_size=64
+				 batch_size=64,
 				 **kwargs):
 
 		self.env = env
