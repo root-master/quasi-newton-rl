@@ -13,6 +13,7 @@ class Trainer():
 				 controller=None,
 				 experience_memory=None,
 				 quasi_newton=None,
+				 batch_size=64
 				 **kwargs):
 
 		self.env = env
@@ -26,9 +27,8 @@ class Trainer():
 		self.max_steps_testing = 10000
 		self.num_episodes_per_test = 10
 		# training parameters
-		self.max_iter = int(5E6)
+		self.max_iter = 1024*1024 # int(5E6)
 		self.controller_target_update_freq = 10000
-		self.learning_starts = 50000
 		self.save_model_freq = 50000
 		self.test_freq = 10000
 		self.subgoal_discovery_freq = 50000
@@ -38,7 +38,8 @@ class Trainer():
 		self.epsilon_annealing_steps = 1000000
 		self.repeat_noop_action = 0
 		self.save_results_freq = 100000
-		self.batch_size = 64
+		self.batch_size = batch_size
+		self.learning_starts = self.batch_size
 		self.learning_freq = self.batch_size
 
 		self.__dict__.update(kwargs) # updating input kwargs params 
@@ -69,7 +70,7 @@ class Trainer():
 		self.episode_start_time = time.time()
 		S = self.env.reset()
 		self.s = self.four_frames_to_4_84_84(S)
-		for t in range(self.batch_size): # fill initial expereince memory 
+		for t in range(self.learning_starts): # fill initial expereince memory 
 			self.play()
 			self.step += 1
 		self.controller.init_Okm1() # compute g_k^{O_{k-1}} and L_k^{O_{k-1}}
@@ -88,11 +89,11 @@ class Trainer():
 				self.controller.update_target_params()
 
 			if t>0 and (self.step % self.save_model_freq == 0):
-				model_save_path = './models/' + self.env.task + '_' + str(self.step) + '.model'
+				model_save_path = './models/' + self.env.task + '_steps_' + str(self.step) + '.model'
 				self.controller.save_model(model_save_path=model_save_path)
 
 			if (t>0) and (self.step % self.save_results_freq == 0):
-				results_file_path = './results/performance_results_' + str(self.step) + '.pkl'
+				results_file_path = './results/performance_results_for_' + self.env.task + '_steps_' + str(self.step) + '.pkl'
 				with open(results_file_path, 'wb') as f: 
 					pickle.dump([self.episode_steps_list,
 								 self.episode_scores_list,

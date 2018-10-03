@@ -10,7 +10,7 @@ from Environment import Environment
 env = Environment(task=task) 
 num_actions = env.env.action_space.n
 
-batch_size = 64
+batch_size = 256
 
 # create expereince memory
 from memory import ExperienceMemory 
@@ -31,7 +31,8 @@ from trainer import Trainer
 atari_trainer = Trainer(env=env,
 				 controller=controller,
 				 experience_memory=experience_memory,
-				 quasi_newton=lbfgs)
+				 quasi_newton=lbfgs,
+				 batch_size=batch_size)
 
 # run the training loop
 atari_trainer.train()
