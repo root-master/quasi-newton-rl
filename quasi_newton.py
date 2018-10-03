@@ -64,6 +64,7 @@ class LBFGS():
 		self.k += 1
 
 	def satisfy_Wolfe_conditions(self):
+		print('finding step length via running Wolfe Condition')
 		self.gk_Ok = self.controller.convert_gk_Ok_to_np_vec()
 		self.Lk_Ok = self.controller.convert_Lk_Ok_to_np()
 		self.alpha = 1.0
