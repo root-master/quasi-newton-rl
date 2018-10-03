@@ -36,29 +36,5 @@ atari_trainer = Trainer(env=env,
 
 # run the training loop
 atari_trainer.train()
-# atari_trainer.test()
-
-# controller.zero_grad()
-# controller.compute_gradient()
-
-# from collections import OrderedDict 
-# keys = controller.Q.state_dict().keys()
-
-# grads = OrderedDict()
-# keys = controller.Q.state_dict().keys()
-# keys_list = []
-
-# for key in iter(keys):
-# 	keys_list.append(key)
-
-# weights = controller.Q.state_dict()
-
-# for i,p in enumerate(controller.Q.parameters()):
-# 	key = keys_list[i]
-# 	grads[key] = p.grad 
-
-controller.init_Okm1()
-controller.get_gk_Ok()
-controller.get_gk_Jk()
 
 
