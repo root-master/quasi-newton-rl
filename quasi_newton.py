@@ -132,7 +132,7 @@ class LBFGS():
 		alpha_vec = []
 		rho_vec = []
 		q = self.gk
-		for i in range(self.S.shape[1], -1, -1):
+		for i in range(self.S.shape[1]-1, -1, -1):
 			s = self.S[:,i]
 			y = self.Y[:,i]
 			rho = 1 / (y @ s)
