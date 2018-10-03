@@ -143,18 +143,19 @@ class Trainer():
 		if terminal or task_done:
 			self.episode_steps_list.append(self.step) 
 			self.episode_scores_list.append(self.episode_scores)
-			self.episode_rewards_list.append(self.episode_rewards)
-			self.game_episode += 1
-			self.episode_rewards = 0.0
-			self.episode_scores = 0.0				
+			self.episode_rewards_list.append(self.episode_rewards)			
 			self.episode_end_time = time.time()
 			episode_time = self.episode_end_time - self.episode_start_time
 			self.episode_time_list.append(episode_time)
 			print('episode score: ', self.episode_scores)
 			print('episode time: {0:.2f}' .format(episode_time))
+
+			self.game_episode += 1
 			print('-'*60)
 			print('game episode: ', self.game_episode)
 			print('time step: ', self.step)
+			self.episode_rewards = 0.0
+			self.episode_scores = 0.0				
 			self.episode_start_time = time.time()
 			S = self.env.reset() # reset S
 			self.s = self.four_frames_to_4_84_84(S) # get s
