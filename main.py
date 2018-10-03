@@ -1,11 +1,11 @@
 # create the environment
-# task = 'Breakout-v0'
+task = 'Breakout-v0'
 # task = 'BeamRider-v0'
 # task = 'Enduro-v0'
 # task = 'Pong-v0'
 # task = 'Qbert-v0'
 # task = 'Seaquest-v0'
-task = 'SpaceInvaders-v0'
+# task = 'SpaceInvaders-v0'
 from Environment import Environment
 env = Environment(task=task) 
 num_actions = env.env.action_space.n
