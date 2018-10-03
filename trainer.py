@@ -150,6 +150,7 @@ class Trainer():
 			self.episode_end_time = time.time()
 			episode_time = self.episode_end_time - self.episode_start_time
 			self.episode_time_list.append(episode_time)
+			print('episode score: ', self.episode_scores)
 			print('episode time: {0:.2f}' .format(episode_time))
 			print('-'*60)
 			print('game episode: ', self.game_episode)
