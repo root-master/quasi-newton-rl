@@ -46,7 +46,6 @@ class Trainer():
 		# counters
 		self.step = 0 
 		self.game_episode = 0
-		self.intrinsic_motivation_learning_episode = 0
 
 		# learning variables
 		self.episode_rewards = 0.0 # including step cost 
@@ -79,11 +78,18 @@ class Trainer():
 			self.play()
 			self.step += 1
 
-			if t>0 and (self.step % self.batch_size == 0):
+			if (t>0) and (self.step % self.learning_freq == 0):
 				self.quasi_newton.run_line_search_algorithm()
 			
 			if (t>0) and (t % self.test_freq == 0): # test controller's performance
 				self.test()
+
+			if t>0 and (self.step % self.controller_target_update_freq == 0):
+				self.controller.update_target_params()
+
+			if t>0 and (self.step % self.save_model_freq == 0):
+				model_save_path = './models/' + self.env.task + '_' + str(t) + '.model'
+				self.controller.save_model(model_save_path=model_save_path)
 
 			if (t>0) and (t % self.save_results_freq == 0):
 				results_file_path = './results/performance_results_' + str(t) + '.pkl'
