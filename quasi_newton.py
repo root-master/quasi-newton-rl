@@ -8,8 +8,14 @@ class LBFGS():
 	def __init__(self,
 				controller=None,
 				m=20,
+				search_method='line-search',
+				search_direction_compute_method='two-loop',
+				condition_method='Armijo',
 				**kwargs):
 		self.controller = controller
+		self.search_method = search_method
+		self.condition_method = condition_method
+		self.search_direction_compute_method = search_direction_compute_method
 		self.m = m
 		self.k = 0 # l-bfgs counter
 		self.gk = None # current gradient on J_k
@@ -46,7 +52,12 @@ class LBFGS():
 		else:
 			self.run_lbfgs_two_loop_recursion()
 
-		self.satisfy_Wolfe_conditions()
+		if self.condition_method == 'Wolfe':
+			self.satisfy_Wolfe_conditions()
+		elif self.condition_method == 'Armijo':
+			self.satisfy_Armijo_condition()
+			self.controller.get_gkp1_Ok()
+			self.gkp1_Ok = self.controller.convert_gkp1_Ok_to_np_vec()
 
 		self.yk = self.gkp1_Ok - self.gk_Ok
 		self.curvature_cond = (self.yk @ self.sk > 0) and not isclose(self.yk @ self.sk, 0)
@@ -58,7 +69,6 @@ class LBFGS():
 			self.gamma = max(1.0,   self.gamma) # lower bound
 		else:
 			print('curvature condition did not satisfy -- ignoring (s,y) pair')
-			self.gamma = 1.0
 
 		self.controller.update_iter_to_kp1()
 		self.k += 1
@@ -114,6 +124,36 @@ class LBFGS():
 
 			self.alpha = self.alpha * rho_ls
 			trial += 1
+
+	def satisfy_Armijo_condition(self):
+		print('finding step length via running Armijo Condition')
+		self.gk_Ok = self.controller.convert_gk_Ok_to_np_vec()
+		self.Lk_Ok = self.controller.convert_Lk_Ok_to_np()
+		self.alpha = 1.0
+		rho_ls = 0.9
+		c1 = 1E-4
+		while True: 
+			self.sk = self.alpha * self.pk
+			self.controller.set_sk(sk_vec=self.sk)
+			self.controller.set_wkp1()
+			self.controller.update_params_to_wkp1()
+			self.controller.get_only_Lkp1_Ok()
+			self.Lkp1_Ok = self.controller.convert_Lkp1_Ok_to_np()
+
+			lhs = self.Lkp1_Ok
+			rhs = self.Lk_Ok + c1 * self.alpha * self.pk @ self.gk
+			self.wolfe_cond_1 = (lhs <= rhs) # sufficient decrease
+
+			if self.wolfe_cond_1:
+				print('Armijo condition --> satisfied')
+				print('alpha = {0:.4f}' .format(self.alpha))
+				break
+			
+			if self.alpha * rho_ls < 0.1:
+				print('WARNING! Armijo condition did not satisfy')
+				break
+
+			self.alpha = self.alpha * rho_ls
 
 	def update_S_Y(self):
 		if self.S.size == 0:

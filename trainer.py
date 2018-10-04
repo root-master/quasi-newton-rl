@@ -27,7 +27,6 @@ class Trainer():
 		self.max_steps_testing = 10000
 		self.num_episodes_per_test = 10
 		# training parameters
-		self.max_iter = 1024*1024 # int(5E6)
 		self.controller_target_update_freq = 10000
 		self.save_model_freq = 50000
 		self.test_freq = 10000
@@ -41,6 +40,8 @@ class Trainer():
 		self.batch_size = batch_size
 		self.learning_starts = self.batch_size
 		self.learning_freq = self.batch_size
+		self.max_iter = 10000*1024 # int(5E6)
+
 
 		self.__dict__.update(kwargs) # updating input kwargs params 
 
