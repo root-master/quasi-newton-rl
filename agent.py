@@ -223,7 +223,7 @@ class Controller():
 				rewards = rewards.to(self.device)
 				dones = dones.to(self.device)
 
-		for param in Q.parameters():
+		for param in self.Q.parameters():
 			param.requires_grad = True
 		# forward path
 		q = self.Q.forward(x/255.0)
@@ -254,7 +254,7 @@ class Controller():
 		# 	p.grad.data.clamp_(-1, 1)
 
 	def get_only_loss(self):
-		for param in Q.parameters():
+		for param in self.Q.parameters():
 			param.requires_grad = False
 		states, actions, rewards, state_primes, dones = \
 			self.experience_memory.sample(batch_size=self.batch_size)
