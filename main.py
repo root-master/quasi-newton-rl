@@ -1,6 +1,6 @@
 # create the environment
-task = 'Breakout-v0'
-# task = 'BeamRider-v0'
+# task = 'Breakout-v0'
+task = 'BeamRider-v0'
 # task = 'Enduro-v0'
 # task = 'Pong-v0'
 # task = 'Qbert-v0'
