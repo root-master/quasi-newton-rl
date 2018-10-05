@@ -81,7 +81,7 @@ class Trainer():
 			self.step += 1
 
 			if (t>0) and (self.step % self.learning_freq == 0):
-				self.quasi_newton.run_line_search_algorithm()
+				self.quasi_newton.step()
 			
 			if (t>0) and (self.step % self.test_freq == 0): # test controller's performance
 				self.test()

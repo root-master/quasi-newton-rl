@@ -4,14 +4,13 @@ from numpy.linalg import inv, qr, norm, pinv
 from scipy.linalg import eig, eigvals
 
 class LBFGS():
-	"""docstring for L_BFGS"""
 	def __init__(self,
-				controller=None,
-				m=20,
-				search_method='line-search',
-				search_direction_compute_method='two-loop',
-				condition_method='Armijo',
-				**kwargs):
+				 controller=None,
+				 m=20,
+				 search_method='line-search',
+				 search_direction_compute_method='two-loop',
+				 condition_method='Wolfe',
+				 **kwargs):
 		self.controller = controller
 		self.search_method = search_method
 		self.condition_method = condition_method
@@ -41,6 +40,10 @@ class LBFGS():
 
 		self.__dict__.update(kwargs) # updating input kwargs params 
 
+	def step(self):
+		if self.search_method == 'line-search':
+			self.run_line_search_algorithm()
+
 	def run_line_search_algorithm(self):
 		print('line-search iteration: ', self.k)
 		self.controller.get_gk_Ok() # compute g_k^{O_k} and L_k^{O_k}
@@ -50,7 +53,8 @@ class LBFGS():
 		if self.S.size == 0:
 			self.pk = - self.gk # in first iteration we take the gradient decent step
 		else:
-			self.run_lbfgs_two_loop_recursion()
+			if self.search_direction_compute_method == 'two-loop':
+				self.run_lbfgs_two_loop_recursion()
 
 		if self.condition_method == 'Wolfe':
 			self.satisfy_Wolfe_conditions()
