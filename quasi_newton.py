@@ -22,6 +22,8 @@ class LBFGS():
 		self.gkp1_Ok = None # next gradient on O_k
 		self.Lk = 0.0 # current loss
 		self.Lkp1 = 0.0 # next loss 
+		self.Lk_Ok = 0.0 # current loss
+		self.Lkp1_Ok = 0.0 # next loss 
 		self.pk = None # line-search step direction
 		self.alpha = 1.0 # line-search step size
 		self.gamma = 1.0 # H_0 = \gamma I
@@ -79,11 +81,14 @@ class LBFGS():
 
 	def satisfy_Wolfe_conditions(self):
 		print('finding step length via running Wolfe Condition')
+
 		self.gk_Ok = self.controller.convert_gk_Ok_to_np_vec()
+		self.Lk_Ok = self.controller.convert_Lk_Ok_to_np()
+
 		print('norm(gk_Ok)   = {0:.4f}' .format(norm(self.gk_Ok)))
 		print('Lk_Ok         = {0:.4f}' .format(self.Lk_Ok) )
-		print('p_k @ g_k     = {0:.4f}' .format(self.pk @ self.gk))
-		self.Lk_Ok = self.controller.convert_Lk_Ok_to_np()
+		print('p_k @ g_k     = {0:.4f}' .format(self.pk @ self.gk))		
+
 		self.alpha = 1.0
 		rho_ls = 0.9
 		c1 = 1E-4
