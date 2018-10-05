@@ -99,7 +99,7 @@ class LBFGS():
 			self.controller.get_gkp1_Ok()
 			self.gkp1_Ok = self.controller.convert_gkp1_Ok_to_np_vec()
 			self.Lkp1_Ok = self.controller.convert_Lkp1_Ok_to_np()
-			print('norm(gkp1_Ok) = {0:.4f}' .format(self.gk_Ok) )
+			print('norm(gkp1_Ok) = {0:.4f}' .format(self.gkp1_Ok) )
 			print('Lkp1_Ok       = {0:.4f}' .format(self.Lk_Ok) )
 
 			lhs = self.Lkp1_Ok
