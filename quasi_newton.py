@@ -40,6 +40,9 @@ class LBFGS():
 		self.alpha_cond_1 = 1.0
 		self.alpha_cond_2 = 1.0
 
+		self.float_formatter = lambda x: "%.4f" % x
+		np.set_printoptions(formatter={'float_kind':self.float_formatter})
+
 		self.__dict__.update(kwargs) # updating input kwargs params 
 
 	def step(self):
@@ -86,8 +89,8 @@ class LBFGS():
 		self.Lk_Ok = self.controller.convert_Lk_Ok_to_np()
 
 		print('norm(gk_Ok)   = {0:.4f}' .format(norm(self.gk_Ok)))
-		print('Lk_Ok         = {0:.4f}' .format(self.Lk_Ok) )
-		print('p_k @ g_k     = {0:.4f}' .format(self.pk @ self.gk))		
+		print('Lk_Ok         = ',self.Lk_Ok)
+		print('p_k @ g_k     = ', (self.pk @ self.gk))	
 
 		self.alpha = 1.0
 		rho_ls = 0.9
@@ -105,7 +108,7 @@ class LBFGS():
 			self.gkp1_Ok = self.controller.convert_gkp1_Ok_to_np_vec()
 			self.Lkp1_Ok = self.controller.convert_Lkp1_Ok_to_np()
 			print('norm(gkp1_Ok) = {0:.4f}' .format(norm(self.gkp1_Ok)))
-			print('Lkp1_Ok       = {0:.4f}' .format(self.Lk_Ok) )
+			print('Lkp1_Ok       = ', self.Lk_Ok)
 
 			lhs = self.Lkp1_Ok
 			rhs = self.Lk_Ok + c1 * self.alpha * self.pk @ self.gk
