@@ -94,7 +94,7 @@ class LBFGS():
 
 		self.alpha = 1.0
 		rho_ls = 0.9
-		c1 = 1E-4
+		c1 = 1E-6
 		c2 = 1.0
 		trial = 0
 		first_time_cond_1 = True
@@ -108,7 +108,7 @@ class LBFGS():
 			self.gkp1_Ok = self.controller.convert_gkp1_Ok_to_np_vec()
 			self.Lkp1_Ok = self.controller.convert_Lkp1_Ok_to_np()
 			print('norm(gkp1_Ok) = {0:.4f}' .format(norm(self.gkp1_Ok)))
-			print('Lkp1_Ok       = ', self.Lk_Ok)
+			print('Lkp1_Ok       = ', self.Lkp1_Ok)
 
 			lhs = self.Lkp1_Ok
 			rhs = self.Lk_Ok + c1 * self.alpha * self.pk @ self.gk
