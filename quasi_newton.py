@@ -80,7 +80,7 @@ class LBFGS():
 	def satisfy_Wolfe_conditions(self):
 		print('finding step length via running Wolfe Condition')
 		self.gk_Ok = self.controller.convert_gk_Ok_to_np_vec()
-		print('norm(gk_Ok)   = {0:.4f}' .format(self.gk_Ok) )
+		print('norm(gk_Ok)   = {0:.4f}' .format(norm(self.gk_Ok)))
 		print('Lk_Ok         = {0:.4f}' .format(self.Lk_Ok) )
 		print('p_k @ g_k     = {0:.4f}' .format(self.pk @ self.gk))
 		self.Lk_Ok = self.controller.convert_Lk_Ok_to_np()
@@ -99,7 +99,7 @@ class LBFGS():
 			self.controller.get_gkp1_Ok()
 			self.gkp1_Ok = self.controller.convert_gkp1_Ok_to_np_vec()
 			self.Lkp1_Ok = self.controller.convert_Lkp1_Ok_to_np()
-			print('norm(gkp1_Ok) = {0:.4f}' .format(self.gkp1_Ok) )
+			print('norm(gkp1_Ok) = {0:.4f}' .format(norm(self.gkp1_Ok)))
 			print('Lkp1_Ok       = {0:.4f}' .format(self.Lk_Ok) )
 
 			lhs = self.Lkp1_Ok
