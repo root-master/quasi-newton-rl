@@ -289,7 +289,7 @@ class Controller():
 		self.L = self.loss.data # compute loss
 
 	def update_target_params(self):
-		self.Q_t.module.load_state_dict(self.Q.state_dict())
+		self.Q_t.load_state_dict(self.Q.state_dict())
 		for param in self.Q_t.parameters():
 			param.requires_grad = False
 
