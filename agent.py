@@ -13,7 +13,8 @@ class Controller():
 				 experience_memory=None,
 				 batch_size=64,
 				 gamma=0.99,
-				 num_actions=4):
+				 num_actions=4,
+				 use_multiple_gpu=True):
 		
 		self.experience_memory = experience_memory # expereince replay memory
 		self.gamma = 0.99
@@ -34,8 +35,8 @@ class Controller():
 		self.g = None # general gradient
 		self.L = None # general loass
 
+		self.use_multiple_gpu = use_multiple_gpu
 		# BUILD MODEL 
-		USE_CUDA = torch.cuda.is_available()
 		if torch.cuda.is_available():
 			self.device = torch.device("cuda:0")
 		else:
@@ -71,7 +72,7 @@ class Controller():
 		Q = Q.to(self.device)
 		Q_t = Q_t.to(self.device)
 
-		if torch.cuda.device_count() > 1:
+		if torch.cuda.device_count() > 1 and self.use_multiple_gpu:
 			Q = nn.DataParallel(Q).to(self.device)
 			Q_t = nn.DataParallel(Q_t).to(self.device)
 
@@ -148,7 +149,14 @@ class Controller():
 			self.wkp1[key] = self.wk[key] + self.sk[key]
 
 	def update_params_to_wkp1(self):
-		self.Q.load_state_dict(self.wkp1)
+		if torch.cuda.device_count() > 1 and self.use_multiple_gpu:
+			self.wkp1_renamed = OrderedDict()
+			for key in self.keys:
+				renamed_key = 'module.' + key	
+				self.wkp1_renamed[renamed_key] = self.wkp1[key]
+				self.Q.load_state_dict(self.wkp1_renamed)
+		else:
+			self.Q.load_state_dict(self.wkp1)
 
 	def revert_params_to_wk(self):
 		self.Q.load_state_dict(self.wk)
