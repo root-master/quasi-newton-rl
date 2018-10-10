@@ -73,12 +73,15 @@ class LBFGS():
 		self.curvature_cond = (self.yk @ self.sk > 0) and not isclose(self.yk @ self.sk, 0)
 		if self.curvature_cond:
 			print('curvature condition --> satisfy')
+			print('norm(sk)      = {0:.4f}' .format(norm(self.sk)))
+			print('norm(yk)      = {0:.4f}' .format(norm(self.yk)))
 			print('s @ y = {0:.4f}' .format(self.yk @ self.sk))
 			self.update_S_Y()
 			self.gamma = (self.sk @ self.yk) / (self.yk @ self.yk)
-			print('gamma = {0:.4f}' .format(self.gamma))
-			# self.gamma = min(500.0, self.gamma) # upper bound
-			# self.gamma = max(1.0,   self.gamma) # lower bound
+			print('gamma before bound = {0:.4f}' .format(self.gamma))
+			self.gamma = min(500.0, self.gamma) # upper bound
+			self.gamma = max(1.0,   self.gamma) # lower bound
+			print('gamma after  bound = {0:.4f}' .format(self.gamma))
 		else:
 			print('curvature condition did not satisfy -- ignoring (s,y) pair')
 
@@ -106,6 +109,7 @@ class LBFGS():
 		first_time_cond_2 = True
 		while True: 
 			self.sk = self.alpha * self.pk
+			print('norm(sk)      = {0:.4f}' .format(norm(self.sk)))
 			self.controller.set_sk(sk_vec=self.sk)
 			self.controller.set_wkp1()
 			self.controller.update_params_to_wkp1()
