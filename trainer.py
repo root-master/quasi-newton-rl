@@ -159,7 +159,7 @@ class Trainer():
 			self.episode_scores = 0.0				
 			self.episode_start_time = time.time()
 			S = self.env.reset() # reset S
-			self.s = self.four_frames_to_4_84_84(S) # get s
+			self.s = self.four_frames_to_4_84_84(S)
 
 	def test(self):
 		for i in range(self.num_episodes_per_test):

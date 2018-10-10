@@ -10,7 +10,7 @@ from Environment import Environment
 env = Environment(task=task) 
 num_actions = env.env.action_space.n
 
-batch_size = 1024
+batch_size = 128
 
 # create expereince memory
 from memory import ExperienceMemory 

@@ -40,8 +40,9 @@ class LBFGS():
 		self.alpha_cond_1 = 1.0
 		self.alpha_cond_2 = 1.0
 
-		self.float_formatter = lambda x: "%.4f" % x
-		np.set_printoptions(formatter={'float_kind':self.float_formatter})
+		np.set_printoptions(precision=4)
+		float_formatter = lambda x: "%.4f" % x
+		np.set_printoptions(formatter={'float_kind':float_formatter})
 
 		self.__dict__.update(kwargs) # updating input kwargs params 
 
@@ -72,10 +73,12 @@ class LBFGS():
 		self.curvature_cond = (self.yk @ self.sk > 0) and not isclose(self.yk @ self.sk, 0)
 		if self.curvature_cond:
 			print('curvature condition --> satisfy')
+			print('s @ y = {0:.4f}' .format(self.yk @ self.sk))
 			self.update_S_Y()
 			self.gamma = (self.sk @ self.yk) / (self.yk @ self.yk)
-			self.gamma = min(500.0, self.gamma) # upper bound
-			self.gamma = max(1.0,   self.gamma) # lower bound
+			print('gamma = {0:.4f}' .format(self.gamma))
+			# self.gamma = min(500.0, self.gamma) # upper bound
+			# self.gamma = max(1.0,   self.gamma) # lower bound
 		else:
 			print('curvature condition did not satisfy -- ignoring (s,y) pair')
 
@@ -89,13 +92,15 @@ class LBFGS():
 		self.Lk_Ok = self.controller.convert_Lk_Ok_to_np()
 
 		print('norm(gk_Ok)   = {0:.4f}' .format(norm(self.gk_Ok)))
-		print('Lk_Ok         = ',self.Lk_Ok)
-		print('p_k @ g_k     = ', (self.pk @ self.gk))	
+		print('norm(gk)      = {0:.4f}' .format(norm(self.gk)))
+		print('norm(pk)      = {0:.4f}' .format(norm(self.pk)))
+		print('Lk_Ok         = {0:.4f}' .format(self.Lk_Ok))
+		print('pk @ gk       = {0:.4f}' .format(self.pk @ self.gk))	
 
 		self.alpha = 1.0
 		rho_ls = 0.9
-		c1 = 1E-6
-		c2 = 1.0
+		c1 = 1E-4
+		c2 = 0.9
 		trial = 0
 		first_time_cond_1 = True
 		first_time_cond_2 = True
@@ -107,8 +112,9 @@ class LBFGS():
 			self.controller.get_gkp1_Ok()
 			self.gkp1_Ok = self.controller.convert_gkp1_Ok_to_np_vec()
 			self.Lkp1_Ok = self.controller.convert_Lkp1_Ok_to_np()
+			print('alpha = {0:.4f}' .format(self.alpha))
 			print('norm(gkp1_Ok) = {0:.4f}' .format(norm(self.gkp1_Ok)))
-			print('Lkp1_Ok       = ', self.Lkp1_Ok)
+			print('Lkp1_Ok       = {0:.4f}' .format(self.Lkp1_Ok))
 
 			lhs = self.Lkp1_Ok
 			rhs = self.Lk_Ok + c1 * self.alpha * self.pk @ self.gk
@@ -187,16 +193,16 @@ class LBFGS():
 
 	def run_lbfgs_two_loop_recursion(self):
 		print('running two loop recursion')
-		alpha_vec = []
-		rho_vec = []
+		alpha_vec = [0]*self.S.shape[1]
+		rho_vec = [0]*self.S.shape[1]
 		q = self.gk
 		for i in range(self.S.shape[1]-1, -1, -1):
 			s = self.S[:,i]
 			y = self.Y[:,i]
 			rho = 1 / (y @ s)
-			rho_vec.append(rho)
+			rho_vec[i] = rho
 			alpha = rho * s @ q 
-			alpha_vec.append(alpha)
+			alpha_vec[i] = alpha
 			q = q - alpha * y
 
 		r = self.gamma * q		

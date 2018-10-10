@@ -62,7 +62,6 @@ class Controller():
 		Q_t = DQN(in_channels=4, num_actions=num_actions).type(dtype)
 
 		self.wk = Q.state_dict()
-		self.wkp1 = self.wk
 
 		Q_t.load_state_dict(Q.state_dict())
 		Q_t.eval()
@@ -91,7 +90,8 @@ class Controller():
 
 	def compute_Q(self,s):
 		x = s.reshape((1,4,84,84))
-		q = self.Q.forward(torch.Tensor(x).type(self.dtype)/255.0)
+		x = torch.Tensor(x).type(self.dtype)
+		q = self.Q.forward(x/255.0)
 		q_np = q.cpu().detach().numpy()
 		return q_np
 
@@ -103,18 +103,13 @@ class Controller():
 
 	def init_Okm1(self):		
 		self.get_grad_loss()
-		self.wk = self.w
 		self.gk_Okm1 = self.g
 		self.Lk_Okm1 = self.L
 
 	def get_gk_Ok(self):
 		self.get_grad_loss()
-		self.wk = self.w
 		self.gk_Ok = self.g
 		self.Lk_Ok = self.L
-
-	def get_wk(self):
-		self.wk = self.Q.state_dict()
 
 	def get_gkp1_Ok(self):
 		self.get_grad_loss()
@@ -150,7 +145,7 @@ class Controller():
 	def set_wkp1(self):
 		self.wkp1 = OrderedDict()
 		for key in self.keys:	
-			self.wkp1[key] = self.w[key] + self.sk[key]
+			self.wkp1[key] = self.wk[key] + self.sk[key]
 
 	def update_params_to_wkp1(self):
 		self.Q.load_state_dict(self.wkp1)
@@ -207,18 +202,19 @@ class Controller():
 		return self.Lkp1_Ok.cpu().numpy()
 
 	def get_grad_loss(self):
+		self.zero_grad()
 		states, actions, rewards, state_primes, dones = \
 			self.experience_memory.sample(batch_size=self.batch_size)
-		x = torch.Tensor(states)	
-		xp = torch.Tensor(state_primes)
+		x = torch.Tensor(states).type(self.dtype)
+		xp = torch.Tensor(state_primes).type(self.dtype)
 		actions = torch.Tensor(actions).type(self.dlongtype)
 		rewards = torch.Tensor(rewards).type(self.dtype)
 		dones = torch.Tensor(dones).type(self.dtype)
 		# sending data to gpu
 		if torch.cuda.is_available():
 			with torch.cuda.device(0):
-				x = torch.Tensor(x).to(self.device).type(self.dtype)
-				xp = torch.Tensor(xp).to(self.device).type(self.dtype)
+				x = torch.Tensor(x).to(self.device)
+				xp = torch.Tensor(xp).to(self.device)
 				actions = actions.to(self.device)
 				rewards = rewards.to(self.device)
 				dones = dones.to(self.device)
@@ -233,25 +229,25 @@ class Controller():
 		q_p1 = self.Q.forward(xp/255.0)
 		_, a_prime = q_p1.max(1)
 
-		q_t_p1 = self.Q_t.forward(xp)
+		q_t_p1 = self.Q_t.forward(xp/255.0)
 		q_t_p1 = q_t_p1.gather(1, a_prime.unsqueeze(1))
 		q_t_p1 = q_t_p1.squeeze()
 		target = rewards + self.gamma * (1 - dones) * q_t_p1
-		self.zero_grad()
-		self.loss_fn = nn.SmoothL1Loss()
+
+		self.loss_fn = F.mse_loss
 		self.loss = self.loss_fn(q, target)
+		# self.loss = torch.mean((target - q) ** 2)
 		self.loss.backward()
 
 		self.L = self.loss.data # compute loss
 		self.g = OrderedDict() # dict of gradients
-		self.w = self.Q.state_dict() # dict of weights 
+
+		for p in self.Q.parameters():
+			p.grad.data.clamp_(-1, 1)
 
 		for i,p in enumerate(self.Q.parameters()):
 			key = self.keys[i]
-			self.g[key] = p.grad 
-
-		# for p in self.Q.parameters():
-		# 	p.grad.data.clamp_(-1, 1)
+			self.g[key] = p.grad.data 
 
 	def get_only_loss(self):
 		for param in self.Q.parameters():
@@ -290,6 +286,8 @@ class Controller():
 
 	def update_target_params(self):
 		self.Q_t.load_state_dict(self.Q.state_dict())
+		for param in self.Q_t.parameters():
+			param.requires_grad = False
 
 	def save_model(self, model_save_path):
 		torch.save(self.Q.state_dict(), model_save_path)
