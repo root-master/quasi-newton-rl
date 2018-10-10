@@ -150,11 +150,7 @@ class Controller():
 
 	def update_params_to_wkp1(self):
 		if torch.cuda.device_count() > 1 and self.use_multiple_gpu:
-			self.wkp1_renamed = OrderedDict()
-			for key in self.keys:
-				renamed_key = 'module.' + key	
-				self.wkp1_renamed[renamed_key] = self.wkp1[key]
-				self.Q.load_state_dict(self.wkp1_renamed)
+			self.Q.module.load_state_dict(self.wkp1)
 		else:
 			self.Q.load_state_dict(self.wkp1)
 
@@ -293,7 +289,7 @@ class Controller():
 		self.L = self.loss.data # compute loss
 
 	def update_target_params(self):
-		self.Q_t.load_state_dict(self.Q.state_dict())
+		self.Q_t.module.load_state_dict(self.Q.state_dict())
 		for param in self.Q_t.parameters():
 			param.requires_grad = False
 
