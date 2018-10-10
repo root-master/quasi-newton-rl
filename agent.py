@@ -213,8 +213,8 @@ class Controller():
 		# sending data to gpu
 		if torch.cuda.is_available():
 			with torch.cuda.device(0):
-				x = torch.Tensor(x).to(self.device)
-				xp = torch.Tensor(xp).to(self.device)
+				x = x.to(self.device)
+				xp = xp.to(self.device)
 				actions = actions.to(self.device)
 				rewards = rewards.to(self.device)
 				dones = dones.to(self.device)
