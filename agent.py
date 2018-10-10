@@ -79,7 +79,7 @@ class Controller():
 		self.Q_t = Q_t
 
 		self.keys = []
-		for key in iter(self.Q.state_dict().keys()):
+		for key in iter(self.wk.keys()):
 			self.keys.append(key)
 
 		print('init: Controller --> OK')
