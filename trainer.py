@@ -103,7 +103,6 @@ class Trainer():
 								 self.testing_scores], f)
 			
 	def play(self):
-		# self.env.render()
 		s = self.s
 		if self.step < self.learning_starts:
 			a = self.env.action_space.sample()
