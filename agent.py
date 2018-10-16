@@ -90,6 +90,7 @@ class Controller():
 		return q_np.argmax()
 
 	def compute_Q(self,s):
+		self.Q.eval()
 		x = s.reshape((1,4,84,84))
 		x = torch.Tensor(x).type(self.dtype)
 		q = self.Q.forward(x/255.0)
@@ -206,6 +207,7 @@ class Controller():
 		return self.Lkp1_Ok.cpu().numpy()
 
 	def get_grad_loss(self):
+		self.Q.train()
 		self.zero_grad()
 		states, actions, rewards, state_primes, dones = \
 			self.experience_memory.sample(batch_size=self.batch_size)
@@ -223,8 +225,8 @@ class Controller():
 				rewards = rewards.to(self.device)
 				dones = dones.to(self.device)
 
-		for param in self.Q.parameters():
-			param.requires_grad = True
+		# for param in self.Q.parameters():
+		# 	param.requires_grad = True
 		# forward path
 		q = self.Q.forward(x/255.0)
 		q = q.gather(1, actions.unsqueeze(1))
@@ -238,9 +240,10 @@ class Controller():
 		q_t_p1 = q_t_p1.squeeze()
 		target = rewards + self.gamma * (1 - dones) * q_t_p1
 
-		self.loss_fn = F.mse_loss
-		self.loss = self.loss_fn(q, target)
+		# self.loss_fn = F.mse_loss
+		# self.loss = self.loss_fn(q, target)
 		# self.loss = torch.mean((target - q) ** 2)
+		self.loss = 0.5 * torch.mean( (target - q).pow(2) )
 		self.loss.backward()
 
 		self.L = self.loss.data # compute loss
@@ -254,8 +257,9 @@ class Controller():
 			self.g[key] = p.grad.data 
 
 	def get_only_loss(self):
-		for param in self.Q.parameters():
-			param.requires_grad = False
+		self.Q.eval()
+		# for param in self.Q.parameters():
+		# 	param.requires_grad = False
 		states, actions, rewards, state_primes, dones = \
 			self.experience_memory.sample(batch_size=self.batch_size)
 		x = torch.Tensor(states)	
