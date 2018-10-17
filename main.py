@@ -21,8 +21,6 @@ args = parser.parse_args()
 task = args.task
 batch_size = args.batch_size
 
-
-
 from Environment import Environment
 env = Environment(task=task) 
 num_actions = env.env.action_space.n
