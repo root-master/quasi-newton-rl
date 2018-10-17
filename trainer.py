@@ -132,8 +132,8 @@ class Trainer():
 			print('agent terminated, end of episode') 
 			r = min(-1.0,r)
 
-		if r < 0.0 or isclose(r, 0.0):
-			r = min(-0.1, r)
+		# if r < 0.0 or isclose(r, 0.0):
+		# 	r = min(-0.1,r)
 
 		self.episode_rewards += r
 
