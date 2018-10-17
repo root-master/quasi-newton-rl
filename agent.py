@@ -156,7 +156,10 @@ class Controller():
 			self.Q.load_state_dict(self.wkp1)
 
 	def revert_params_to_wk(self):
-		self.Q.load_state_dict(self.wk)
+		if torch.cuda.device_count() > 1 and self.use_multiple_gpu:
+			self.Q.module.load_state_dict(self.wk)
+		else:
+			self.Q.load_state_dict(self.wk)
 
 	def update_iter_to_kp1(self):
 		'''Warning: last step to do to update k to k+1'''

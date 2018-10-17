@@ -82,7 +82,7 @@ class LBFGS():
 			self.gkp1_Ok = self.controller.convert_gkp1_Ok_to_np_vec()
 
 		self.yk = self.gkp1_Ok - self.gk_Ok
-		self.curvature_cond = (self.yk @ self.sk > 0) and not isclose(self.yk @ self.sk, 0)
+		self.curvature_cond = (self.yk @ self.sk > 0) and not isclose(self.yk @ self.sk, 0, rel_tol=1e-05)
 		if self.curvature_cond:
 			print('curvature condition --> satisfy')
 			print('norm(sk)      = {0:.4f}' .format(norm(self.sk)))
@@ -96,6 +96,10 @@ class LBFGS():
 			print('gamma after  bound = {0:.4f}' .format(self.gamma))
 		else:
 			print('curvature condition did not satisfy -- ignoring (s,y) pair')
+
+		if not self.wolfe_cond and self.condition_method=='Wolfe':
+			print('ignore step since Wolfe conditions did not satisfied')
+			self.controller.revert_params_to_wk()
 
 		self.controller.update_iter_to_kp1()
 		self.k += 1
@@ -148,7 +152,7 @@ class LBFGS():
 				self.alpha_cond_2 = self.alpha
 				first_time_cond_2 = False
 
-			if self.wolfe_cond_1 and self.wolfe_cond_2:
+			if self.wolfe_cond:
 				print('Wolfe conditions --> satisfied')
 				print('alpha = {0:.4f}' .format(self.alpha))
 				break
