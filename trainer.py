@@ -137,7 +137,7 @@ class Trainer():
 
 		self.episode_rewards += r
 
-		r = np.clip(r, -1.0, 1.0)
+		# r = np.clip(r, -1.0, 1.0)
 		experience = Experience(s, a, r, sp, done)
 		self.experience_memory.push(experience)
 		self.s = copy.deepcopy(sp)
