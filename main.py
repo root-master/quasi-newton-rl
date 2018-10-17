@@ -22,6 +22,7 @@ args = parser.parse_args()
 
 task = args.task
 batch_size = args.batch_size
+m = args.m
 
 from Environment import Environment
 env = Environment(task=task) 
@@ -40,7 +41,7 @@ controller = Controller(experience_memory=experience_memory,
 
 # create quasi-Newton optimizier
 from quasi_newton import LBFGS
-lbfgs = LBFGS(controller=controller)
+lbfgs = LBFGS(controller=controller, m=m)
 
 # create the trainer
 from trainer import Trainer
