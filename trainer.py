@@ -101,8 +101,10 @@ class Trainer():
 								 self.episode_scores_list,
 								 self.episode_rewards_list,
 								 self.episode_time_list,
-								 self.testing_scores], f)
-			
+								 self.testing_scores,
+								 self.quasi_newton.loss_list,
+								 self.quasi_newton.grad_norm_list], f)
+
 	def play(self):
 		s = self.s
 		if self.step < self.learning_starts:

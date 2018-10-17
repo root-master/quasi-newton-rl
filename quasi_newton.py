@@ -58,6 +58,8 @@ class LBFGS():
 		print('line-search iteration: ', self.k)
 		self.controller.get_gk_Ok() # compute g_k^{O_k} and L_k^{O_k}
 		self.controller.get_gk_Jk() # compute g_k^{J_k} and L_k^{J_k}
+		self.controller.get_Lk_Jk() # compute g_k^{J_k} and L_k^{J_k}
+
 		self.gk_Ok = self.controller.convert_gk_Ok_to_np_vec()
 		self.Lk_Ok = self.controller.convert_Lk_Ok_to_np()
 		self.gk = self.controller.convert_gk_Jk_to_np_vec()
