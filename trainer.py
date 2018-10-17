@@ -6,6 +6,7 @@ from memory import Experience
 from Environment import Environment
 import time
 import cv2
+from math import isclose
 
 class Trainer():
 	def __init__(self,
@@ -118,22 +119,23 @@ class Trainer():
 			print('agent died, current lives = ', new_lives)
 			r = min(-1.0, r)			
 
-		if terminal and new_lives>0:
+		if (terminal and new_lives>0):
 			task_done = True
 			done = 1
 			r = max(1.0,r)
 			print('task is solved succesfully, end of episode')
-		else: 
+		else:
 			task_done = False
 			done = 0
-			r = min(-0.1,r) # just a tiny punishment
-
-		self.episode_rewards += r
 
 		if terminal and new_lives==0:
-			terminal = True
 			print('agent terminated, end of episode') 
-			r = min(-10.0,r)
+			r = min(-1.0,r)
+
+		if r < 0.0 or isclose(r, 0.0):
+			r = min(-0.1, r)
+
+		self.episode_rewards += r
 
 		r = np.clip(r, -1.0, 1.0)
 		experience = Experience(s, a, r, sp, done)

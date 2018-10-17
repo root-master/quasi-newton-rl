@@ -244,7 +244,7 @@ class Controller():
 		# self.loss = self.loss_fn(q, target)
 		# self.loss = torch.mean((target - q) ** 2)
 		error = target - q
-		error.clamp_(-1, 1)
+		error = error.clamp(-1, 1)
 		self.loss = 0.5 * torch.mean( error.pow(2) )
 		self.loss.backward()
 
