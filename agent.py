@@ -216,6 +216,8 @@ class Controller():
 		actions = torch.Tensor(actions).type(self.dlongtype)
 		rewards = torch.Tensor(rewards).type(self.dtype)
 		dones = torch.Tensor(dones).type(self.dtype)
+
+		rewards = rewards.clamp(-1, 1)
 		# sending data to gpu
 		if torch.cuda.is_available():
 			with torch.cuda.device(0):
@@ -244,7 +246,7 @@ class Controller():
 		# self.loss = self.loss_fn(q, target)
 		# self.loss = torch.mean((target - q) ** 2)
 		error = target - q
-		# error = error.clamp(-1, 1)
+		error = error.clamp(-1, 1)
 		self.loss = 0.5 * torch.mean( error.pow(2) )
 		self.loss.backward()
 
