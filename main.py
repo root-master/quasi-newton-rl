@@ -1,6 +1,17 @@
+import argparse
+parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
+parser.add_argument('--batch-size', type=int, default=1024, metavar='N',
+                    help='input batch size for training')
+parser.add_argument('--task', type=str, default='Breakout-v0', metavar='T',
+                    help='choose an ATARI task to play')
+parser.add_argument('--seed', type=int, default=1, metavar='S',
+                    help='random seed')
+
+args = parser.parse_args()
+
 # create the environment
-# task = 'Breakout-v0'
-task = 'BeamRider-v0'
+task = 'Breakout-v0'
+# task = 'BeamRider-v0'
 # task = 'Enduro-v0'
 # task = 'Pong-v0'
 # task = 'Qbert-v0'

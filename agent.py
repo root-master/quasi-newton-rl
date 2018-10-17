@@ -243,7 +243,9 @@ class Controller():
 		# self.loss_fn = F.mse_loss
 		# self.loss = self.loss_fn(q, target)
 		# self.loss = torch.mean((target - q) ** 2)
-		self.loss = 0.5 * torch.mean( (target - q).pow(2) )
+		error = target - q
+		error.clamp_(-1, 1)
+		self.loss = 0.5 * torch.mean( error.pow(2) )
 		self.loss.backward()
 
 		self.L = self.loss.data # compute loss
