@@ -5,12 +5,12 @@ import torch.nn.functional as F
 class DQN(nn.Module):
     def __init__(self, in_channels=4, num_actions=4):
         super(DQN, self).__init__()
-        self.conv1 = nn.Conv2d(in_channels=in_channels, out_channels=32, kernel_size=8, stride=4,bias=False)
-        self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=4, stride=2,bias=False)
-        self.conv3 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, stride=1,bias=False)
+        self.conv1 = nn.Conv2d(in_channels=in_channels, out_channels=32, kernel_size=8, stride=4)
+        self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=4, stride=2)
+        self.conv3 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, stride=1)
 
-        self.fc1 = nn.Linear(in_features=7*7*64, out_features=512, bias=False)
-        self.fc2 = nn.Linear(in_features=512, out_features=num_actions, bias=False)
+        self.fc1 = nn.Linear(in_features=7*7*64, out_features=512)
+        self.fc2 = nn.Linear(in_features=512, out_features=num_actions)
 
         self.relu = nn.ReLU()
 
