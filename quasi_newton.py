@@ -30,6 +30,10 @@ class LBFGS():
 		self.sk = None
 		self.yk = None
 
+		# saving learning params
+		self.loss_list = []
+		self.grad_norm_list = []
+
 		self.S = np.array([[]])
 		self.Y = np.array([[]])
 
@@ -54,7 +58,13 @@ class LBFGS():
 		print('line-search iteration: ', self.k)
 		self.controller.get_gk_Ok() # compute g_k^{O_k} and L_k^{O_k}
 		self.controller.get_gk_Jk() # compute g_k^{J_k} and L_k^{J_k}
+		self.gk_Ok = self.controller.convert_gk_Ok_to_np_vec()
+		self.Lk_Ok = self.controller.convert_Lk_Ok_to_np()
 		self.gk = self.controller.convert_gk_Jk_to_np_vec()
+		self.Lk = self.controller.convert_Lk_Jk_to_np()
+
+		self.loss_list.append(float(self.Lk))
+		self.grad_norm_list.append(norm(self.gk))
 
 		if self.S.size == 0:
 			self.pk = - self.gk # in first iteration we take the gradient decent step
@@ -90,10 +100,6 @@ class LBFGS():
 
 	def satisfy_Wolfe_conditions(self):
 		print('finding step length via running Wolfe Condition')
-
-		self.gk_Ok = self.controller.convert_gk_Ok_to_np_vec()
-		self.Lk_Ok = self.controller.convert_Lk_Ok_to_np()
-
 		print('norm(gk_Ok)   = {0:.4f}' .format(norm(self.gk_Ok)))
 		print('norm(gk)      = {0:.4f}' .format(norm(self.gk)))
 		print('norm(pk)      = {0:.4f}' .format(norm(self.pk)))
@@ -154,8 +160,6 @@ class LBFGS():
 
 	def satisfy_Armijo_condition(self):
 		print('finding step length via running Armijo Condition')
-		self.gk_Ok = self.controller.convert_gk_Ok_to_np_vec()
-		self.Lk_Ok = self.controller.convert_Lk_Ok_to_np()
 		self.alpha = 1.0
 		rho_ls = 0.9
 		c1 = 1E-4
