@@ -29,6 +29,8 @@ class LBFGS():
 		self.gamma = 1.0 # H_0 = \gamma I
 		self.sk = None
 		self.yk = None
+		self.termination_criterion = False
+		self.min_grad = 1E-5
 
 		# saving learning params
 		self.loss_list = []
@@ -67,6 +69,10 @@ class LBFGS():
 
 		self.loss_list.append(float(self.Lk))
 		self.grad_norm_list.append(norm(self.gk))
+		self.termination_criterion = norm(self.gk) < self.min_grad
+
+		if self.termination_criterion:
+			return
 
 		if self.S.size == 0:
 			self.pk = - self.gk # in first iteration we take the gradient decent step

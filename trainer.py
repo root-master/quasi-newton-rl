@@ -28,7 +28,7 @@ class Trainer():
 		self.max_steps_testing = 10000
 		self.num_episodes_per_test = 10
 		# training parameters
-		self.controller_target_update_freq = 4*batch_size
+		self.controller_target_update_freq = 8*batch_size
 		self.save_model_freq = 50000
 		self.test_freq = 10000
 		self.subgoal_discovery_freq = 50000
@@ -83,27 +83,39 @@ class Trainer():
 
 			if (t>0) and (self.step % self.learning_freq == 0):
 				self.quasi_newton.step()
-			
+
 			if (t>0) and (self.step % self.test_freq == 0): # test controller's performance
 				self.test()
+
+			if self.quasi_newton.termination_criterion:
+				print('Quasi-Newton termination criterion --> exit')
+				self.save_results()
+				self.save_model()
+				return
 
 			if t>0 and (self.step % self.controller_target_update_freq == 0):
 				self.controller.update_target_params()
 
 			if t>0 and (self.step % self.save_model_freq == 0):
-				model_save_path = './models/' + self.env.task + '_steps_' + str(self.step) + '.model'
-				self.controller.save_model(model_save_path=model_save_path)
+				self.save_model()
 
 			if (t>0) and (self.step % self.save_results_freq == 0):
-				results_file_path = './results/performance_results_for_' + self.env.task + '_steps_' + str(self.step) + '.pkl'
-				with open(results_file_path, 'wb') as f: 
-					pickle.dump([self.episode_steps_list,
-								 self.episode_scores_list,
-								 self.episode_rewards_list,
-								 self.episode_time_list,
-								 self.testing_scores,
-								 self.quasi_newton.loss_list,
-								 self.quasi_newton.grad_norm_list], f)
+				self.save_results()
+
+	def save_results(self):
+		results_file_path = './results/performance_results_for_' + self.env.task + '_steps_' + str(self.step) + '.pkl'
+		with open(results_file_path, 'wb') as f: 
+			pickle.dump([self.episode_steps_list,
+						 self.episode_scores_list,
+						 self.episode_rewards_list,
+						 self.episode_time_list,
+						 self.testing_scores,
+						 self.quasi_newton.loss_list,
+						 self.quasi_newton.grad_norm_list], f)
+
+	def save_model(self):
+		model_save_path = './models/' + self.env.task + '_steps_' + str(self.step) + '.model'
+		self.controller.save_model(model_save_path=model_save_path)
 
 	def play(self):
 		s = self.s
