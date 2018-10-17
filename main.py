@@ -4,6 +4,8 @@ parser.add_argument('--batch-size','-batch', type=int, default=512, metavar='b',
                     help='input batch size for training')
 parser.add_argument('--task','-task', type=str, default='Breakout-v0', metavar='T',
                     help='choose an ATARI task to play')
+parser.add_argument('--m','-m', type=int, default=20, metavar='m',
+                    help='L-BFGS memory size')
 parser.add_argument('--seed','-seed',type=int, default=1, metavar='i',
                     help='random seed')
 
