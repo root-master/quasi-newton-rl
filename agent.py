@@ -24,7 +24,7 @@ class Controller():
 
 		torch.manual_seed(seed)
 		torch.cuda.manual_seed(seed)
-		numpy.random.seed(seed=seed)
+		np.random.seed(seed=seed)
 
 		# L-BFGS gradinets and y and s vectors
 		self.gk = None

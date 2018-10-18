@@ -26,7 +26,7 @@ class Trainer():
 
 		# random seed
 		random.seed(seed)
-		numpy.random.seed(seed=seed)
+		np.random.seed(seed=seed)
 
 		# testing environment and parameters 
 		self.testing_env = Environment(task=self.env.task,seed=seed) 

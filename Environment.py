@@ -13,7 +13,7 @@ class Environment():
 
 		self.env.seed(seed)
 		random.seed(seed)
-		numpy.random.seed(seed=seed)
+		np.random.seed(seed=seed)
 
 		self.noop_max = noop_max
 		self.skip_frame = skip_frame
