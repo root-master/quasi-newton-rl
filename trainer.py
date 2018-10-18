@@ -43,6 +43,8 @@ class Trainer():
 		self.learning_freq = self.batch_size
 		self.max_iter = 10000*1024 # int(5E6)
 
+		self.test_duration = 0.0
+		self.there_was_a_test = False
 
 		self.__dict__.update(kwargs) # updating input kwargs params 
 
@@ -161,6 +163,9 @@ class Trainer():
 			self.episode_rewards_list.append(self.episode_rewards)			
 			self.episode_end_time = time.time()
 			episode_time = self.episode_end_time - self.episode_start_time
+			if self.there_was_a_test is True:
+				episode_time = episode_time - self.test_duration
+				self.there_was_a_test = False
 			self.episode_time_list.append(episode_time)
 			print('episode score: ', self.episode_scores)
 			print('episode time: {0:.2f}' .format(episode_time))
@@ -176,12 +181,16 @@ class Trainer():
 			self.s = self.four_frames_to_4_84_84(S)
 
 	def test(self):
+		self.there_was_a_test = True
+		test_time_start = time.time()
 		for i in range(self.num_episodes_per_test):
 			self.total_score_testing = 0
 			print('testing episode number: ', i)
 			self.test_one_epsiode()
 			self.testing_scores.append(self.total_score_testing) 
 			print('test score: ', self.total_score_testing)
+		test_time_end = time.time()
+		self.test_duration = test_time_end - test_time_start
 
 	def test_one_epsiode(self):
 		S = self.testing_env.reset()
