@@ -121,7 +121,7 @@ class Trainer():
 						'_search_' + self.quasi_newton.search_method + \
 						'_matrix_' + self.quasi_newton.quasi_newton_matrix + \
 						'_memory_' + str(self.quasi_newton.m) + \
-						'_batch_' + str(self.batch_size)'.pkl'
+						'_batch_' + str(self.batch_size) + '.pkl'
 		with open(results_file_path, 'wb') as f: 
 			pickle.dump([self.episode_steps_list,
 						 self.episode_scores_list,
