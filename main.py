@@ -1,6 +1,6 @@
 import argparse
 parser = argparse.ArgumentParser(description='Quasi-Newton DQN feat. PyTorch')
-parser.add_argument('--batch-size','-batch', type=int, default=512, metavar='b',
+parser.add_argument('--batch-size','-batch', type=int, default=1024, metavar='b',
                     help='input batch size for training')
 parser.add_argument('--task','-task', type=str, default='Breakout-v0', metavar='T',
                     help='choose an ATARI task to play')
