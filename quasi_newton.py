@@ -2,23 +2,27 @@ from math import isclose, sqrt
 import numpy as np
 from numpy.linalg import inv, qr, norm, pinv
 from scipy.linalg import eig, eigvals
+import time
 
-class LBFGS():
+class QUASI_NEWTON():
 	def __init__(self,
 				 controller=None,
 				 m=20,
 				 search_method='line-search',
+				 quasi_newton_matrix='L-BFGS',
 				 search_direction_compute_method='two-loop',
 				 condition_method='Wolfe',
 				 ignore_step_if_wolfe_not_satisfied=False,
+				 seed=0,
 				 **kwargs):
 		self.controller = controller
 		self.search_method = search_method
+		self.quasi_newton_matrix = quasi_newton_matrix
 		self.condition_method = condition_method
 		self.search_direction_compute_method = search_direction_compute_method
 		self.ignore_step_if_wolfe_not_satisfied = ignore_step_if_wolfe_not_satisfied
 		self.m = m
-		self.k = 0 # l-bfgs counter
+		self.k = 0 # iteration number
 		self.gk = None # current gradient on J_k
 		self.gk_Ok = None # current gradient on O_k
 		self.gkp1_Ok = None # next gradient on O_k
@@ -37,6 +41,7 @@ class LBFGS():
 		# saving learning params
 		self.loss_list = []
 		self.grad_norm_list = []
+		self.computations_time_list = []
 
 		self.S = np.array([[]])
 		self.Y = np.array([[]])
@@ -55,8 +60,14 @@ class LBFGS():
 		self.__dict__.update(kwargs) # updating input kwargs params 
 
 	def step(self):
+		start_time = time.time()
 		if self.search_method == 'line-search':
 			self.run_line_search_algorithm()
+		elif self.search_method == 'trust-region':
+			self.run_trust_region_algorithm()
+		end_time = time.time()
+		computation_time = end_time - start_time
+		self.computations_time_list.append(computation_time)
 
 	def run_line_search_algorithm(self):
 		print('line-search iteration: ', self.k)
@@ -79,7 +90,8 @@ class LBFGS():
 		if self.S.size == 0:
 			self.pk = - self.gk # in first iteration we take the gradient decent step
 		else:
-			if self.search_direction_compute_method == 'two-loop':
+			if self.search_direction_compute_method == 'two-loop' \
+					   and self.quasi_newton_matrix == 'L-BFGS':
 				self.run_lbfgs_two_loop_recursion()
 
 		if self.condition_method == 'Wolfe':
@@ -236,4 +248,7 @@ class LBFGS():
 			r = r + s * (alpha_vec[i] - beta)
 
 		self.pk = - r
+
+	def run_trust_region_algorithm(self):
+		pass
 		

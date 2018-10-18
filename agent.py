@@ -14,12 +14,17 @@ class Controller():
 				 batch_size=64,
 				 gamma=0.99,
 				 num_actions=4,
-				 use_multiple_gpu=True):
+				 use_multiple_gpu=True,
+				 seed=0):
 		
 		self.experience_memory = experience_memory # expereince replay memory
 		self.gamma = 0.99
 		self.num_actions = num_actions
 		self.batch_size = batch_size
+
+		torch.manual_seed(seed)
+		torch.cuda.manual_seed(seed)
+		numpy.random.seed(seed=seed)
 
 		# L-BFGS gradinets and y and s vectors
 		self.gk = None
@@ -59,8 +64,8 @@ class Controller():
 		self.dlongtype = dlongtype
 		self.duinttype = duinttype
 
-		Q = DQN(in_channels=4, num_actions=num_actions).type(dtype)		
-		Q_t = DQN(in_channels=4, num_actions=num_actions).type(dtype)
+		Q = DQN(in_channels=4, num_actions=num_actions,seed=seed).type(dtype)		
+		Q_t = DQN(in_channels=4, num_actions=num_actions,seed=seed).type(dtype)
 
 		self.wk = Q.state_dict()
 

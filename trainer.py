@@ -15,14 +15,21 @@ class Trainer():
 				 experience_memory=None,
 				 quasi_newton=None,
 				 batch_size=64,
+				 seed=0,
 				 **kwargs):
 
 		self.env = env
 		self.controller = controller
 		self.experience_memory = experience_memory
 		self.quasi_newton = quasi_newton
-		# testing parameters
-		self.testing_env = Environment(task=self.env.task) # testing environment
+		self.seed = seed
+
+		# random seed
+		random.seed(seed)
+		numpy.random.seed(seed=seed)
+
+		# testing environment and parameters 
+		self.testing_env = Environment(task=self.env.task,seed=seed) 
 		self.testing_scores = [] # record testing scores
 		self.epsilon_testing = 0.05
 		self.max_steps_testing = 10000
@@ -41,7 +48,7 @@ class Trainer():
 		self.batch_size = batch_size
 		self.learning_starts = self.batch_size
 		self.learning_freq = self.batch_size
-		self.max_iter = 10000*1024 # int(5E6)
+		self.max_iter = 2000*1024
 
 		self.test_duration = 0.0
 		self.there_was_a_test = False
@@ -62,10 +69,12 @@ class Trainer():
 		self.episode_time_list = []
 		self.episode_start_time = 0.0
 		self.episode_end_time = 0.0
+		self.total_train_time = 0.0
 
 		print('init trainer --> OK')
 
 	def train(self):
+		train_start_time = time.time()
 		print('-'*60)
 		print('Training DQN using L-BFGS')
 		print('-'*60)
@@ -91,29 +100,41 @@ class Trainer():
 
 			if self.quasi_newton.termination_criterion:
 				print('Quasi-Newton termination criterion --> exit')
-				self.save_results()
-				self.save_model()
-				return
+				# self.save_results()
+				# self.save_model()
+				break
 
 			if t>0 and (self.step % self.controller_target_update_freq == 0):
 				self.controller.update_target_params()
 
-			if t>0 and (self.step % self.save_model_freq == 0):
-				self.save_model()
+			# if t>0 and (self.step % self.save_model_freq == 0):
+			# 	self.save_model()
 
-			if (t>0) and (self.step % self.save_results_freq == 0):
-				self.save_results()
+			# if (t>0) and (self.step % self.save_results_freq == 0):
+			# 	self.save_results()
+		train_end_time = time.time()
+		self.total_train_time = train_end_time - train_start_time
+		self.save_results()
 
 	def save_results(self):
-		results_file_path = './results/performance_results_for_' + self.env.task + '_steps_' + str(self.step) + '.pkl'
+		results_file_path = './results/' +'task_' + self.env.task + \
+						'_search_' + self.quasi_newton.search_method + \
+						'_matrix_' + self.quasi_newton.quasi_newton_matrix + \
+						'_memory_' + str(self.quasi_newton.m) + \
+						'_batch_' + str(self.batch_size)'.pkl'
 		with open(results_file_path, 'wb') as f: 
 			pickle.dump([self.episode_steps_list,
 						 self.episode_scores_list,
 						 self.episode_rewards_list,
 						 self.episode_time_list,
 						 self.testing_scores,
+						 self.total_train_time,
+						 self.batch_size,
+						 self.seed,
+						 self.step,
 						 self.quasi_newton.loss_list,
-						 self.quasi_newton.grad_norm_list], f)
+						 self.quasi_newton.grad_norm_list,
+						 self.quasi_newton.computations_time_list], f)
 
 	def save_model(self):
 		model_save_path = './models/' + self.env.task + '_steps_' + str(self.step) + '.model'

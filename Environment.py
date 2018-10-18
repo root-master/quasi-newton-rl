@@ -6,9 +6,15 @@ class Environment():
 				task='MontezumaRevenge-v0',
 				noop_max=30,
 				skip_frame=4,
-				repeat_action=4):
+				repeat_action=4,
+				seed=seed):
 		self.task = task
 		self.env = gym.make(task)
+
+		self.env.seed(seed)
+		random.seed(seed)
+		numpy.random.seed(seed=seed)
+
 		self.noop_max = noop_max
 		self.skip_frame = skip_frame
 		self.repeat_action = repeat_action
