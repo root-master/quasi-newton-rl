@@ -28,7 +28,7 @@ class Trainer():
 		self.max_steps_testing = 10000
 		self.num_episodes_per_test = 10
 		# training parameters
-		self.controller_target_update_freq = 8*batch_size
+		self.controller_target_update_freq = 4*batch_size
 		self.save_model_freq = 50000
 		self.test_freq = 10000
 		self.subgoal_discovery_freq = 50000

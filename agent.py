@@ -231,8 +231,6 @@ class Controller():
 				rewards = rewards.to(self.device)
 				dones = dones.to(self.device)
 
-		# for param in self.Q.parameters():
-		# 	param.requires_grad = True
 		# forward path
 		q = self.Q.forward(x/255.0)
 		q = q.gather(1, actions.unsqueeze(1))
@@ -246,9 +244,6 @@ class Controller():
 		q_t_p1 = q_t_p1.squeeze()
 		target = rewards + self.gamma * (1 - dones) * q_t_p1
 
-		# self.loss_fn = F.mse_loss
-		# self.loss = self.loss_fn(q, target)
-		# self.loss = torch.mean((target - q) ** 2)
 		error = target - q
 		error = error.clamp(-1, 1)
 		self.loss = 0.5 * torch.mean( error.pow(2) )
