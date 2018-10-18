@@ -10,11 +10,13 @@ class LBFGS():
 				 search_method='line-search',
 				 search_direction_compute_method='two-loop',
 				 condition_method='Wolfe',
+				 ignore_step_if_wolfe_not_satisfied=False,
 				 **kwargs):
 		self.controller = controller
 		self.search_method = search_method
 		self.condition_method = condition_method
 		self.search_direction_compute_method = search_direction_compute_method
+		self.ignore_step_if_wolfe_not_satisfied = ignore_step_if_wolfe_not_satisfied
 		self.m = m
 		self.k = 0 # l-bfgs counter
 		self.gk = None # current gradient on J_k
@@ -103,7 +105,8 @@ class LBFGS():
 		else:
 			print('curvature condition did not satisfy -- ignoring (s,y) pair')
 
-		if not self.wolfe_cond and self.condition_method=='Wolfe':
+		if not self.wolfe_cond and self.condition_method=='Wolfe'\
+						and self.ignore_step_if_wolfe_not_satisfied:
 			print('ignore step since Wolfe conditions did not satisfied')
 			self.controller.revert_params_to_wk()
 
