@@ -7,7 +7,7 @@ class Environment():
 				noop_max=30,
 				skip_frame=4,
 				repeat_action=4,
-				seed=seed):
+				seed=0):
 		self.task = task
 		self.env = gym.make(task)
 
