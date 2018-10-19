@@ -3,7 +3,7 @@
 #SBATCH –mail-type=ALL
 #SBATCH –nodes=1
 ##SBATCH –A
-#SBATCH --partition=appliedmath.q
+#SBATCH -p=appliedmath.q
 #SBATCH –output=line-search.qlog
 #SBATCH –job-name=line-search
 #SBATCH –export=ALL
