@@ -1,8 +1,6 @@
 #!/bin/bash
 #SBATCH –mail-user=jrafatiheravi@ucmerced.edu
 #SBATCH –mail-type=ALL
-#SBATCH –nodes=1
-##SBATCH –A
 #SBATCH -p=appliedmath.q
 #SBATCH –output=line-search.qlog
 #SBATCH –job-name=line-search
