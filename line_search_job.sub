@@ -1,7 +1,9 @@
 #!/bin/bash
 #SBATCH –mail-user=jrafatiheravi@ucmerced.edu
 #SBATCH –mail-type=ALL
-#SBATCH -p=gpu.q
+#SBATCH --partition=appliedmath.q --qos=appliedmath.q
+#SBATCH --gres=gpu:2
+#SBATCH -w, --nodelist=mrcdg06
 #SBATCH –output=line-search.qlog
 #SBATCH –job-name=line-search
 #SBATCH –export=ALL
