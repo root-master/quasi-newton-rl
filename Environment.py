@@ -11,7 +11,7 @@ class Environment():
 		self.task = task
 		self.env = gym.make(task)
 
-		if seed in not None:
+		if seed is not None:
 			self.env.seed(seed)
 			random.seed(seed)
 			np.random.seed(seed=seed)

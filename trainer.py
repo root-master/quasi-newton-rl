@@ -24,11 +24,11 @@ class Trainer():
 		self.quasi_newton = quasi_newton
 
 		# random seed
-		if seed in not None:
+		if seed is not None:
 			random.seed(seed)
 			np.random.seed(seed=seed)
 		self.seed = 0 if seed is None else seed
-		
+
 		# testing environment and parameters 
 		self.testing_env = Environment(task=self.env.task,seed=seed) 
 		self.testing_scores = [] # record testing scores
