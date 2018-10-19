@@ -15,19 +15,20 @@ class Trainer():
 				 experience_memory=None,
 				 quasi_newton=None,
 				 batch_size=64,
-				 seed=0,
+				 seed=None,
 				 **kwargs):
 
 		self.env = env
 		self.controller = controller
 		self.experience_memory = experience_memory
 		self.quasi_newton = quasi_newton
-		self.seed = seed
 
 		# random seed
-		random.seed(seed)
-		np.random.seed(seed=seed)
-
+		if seed in not None:
+			random.seed(seed)
+			np.random.seed(seed=seed)
+		self.seed = 0 if seed is None else seed
+		
 		# testing environment and parameters 
 		self.testing_env = Environment(task=self.env.task,seed=seed) 
 		self.testing_scores = [] # record testing scores

@@ -7,13 +7,14 @@ class Environment():
 				noop_max=30,
 				skip_frame=4,
 				repeat_action=4,
-				seed=0):
+				seed=None):
 		self.task = task
 		self.env = gym.make(task)
 
-		self.env.seed(seed)
-		random.seed(seed)
-		np.random.seed(seed=seed)
+		if seed in not None:
+			self.env.seed(seed)
+			random.seed(seed)
+			np.random.seed(seed=seed)
 
 		self.noop_max = noop_max
 		self.skip_frame = skip_frame
