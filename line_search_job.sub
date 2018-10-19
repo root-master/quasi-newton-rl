@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH -mail-user=jrafatiheravi@ucmerced.edu
-#SBATCH -mail-type=ALL
+#SBATCH --mail-user=jrafatiheravi@ucmerced.edu
+#SBATCH --mail-type=ALL
 #SBATCH -p appliedmath.q
 #SbATCH --qos=appliedmath.q
 #SBATCH --time=0-00:01:00
-#SBATCH -output=line-search.qlog
-#SBATCH -job-name=line-search
-#SBATCH -export=ALL
+#SBATCH -o line-search.qlog
+#SBATCH -J line-search
+#SBATCH --export=ALL
 
 echo $(hostname)
 sleep 60
