@@ -117,7 +117,7 @@ class Trainer():
 		self.save_results()
 
 	def save_results(self):
-		results_file_path = './results/' +'task_' + self.env.task + \
+		results_file_path = './results/' + 'task_' + self.env.task + \
 						'_search_' + self.quasi_newton.search_method + \
 						'_matrix_' + self.quasi_newton.quasi_newton_matrix + \
 						'_memory_' + str(self.quasi_newton.m) + \
