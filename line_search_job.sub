@@ -2,10 +2,9 @@
 #SBATCH –mail-user=jrafatiheravi@ucmerced.edu
 #SBATCH –mail-type=ALL
 #SBATCH –nodes=1
-#SBATCH –ntasks=20
 ##SBATCH –A
 #SBATCH -p appliedmath.q
-#SBATCH –mem=128G
+#SBATCH –mem=64G
 #SBATCH –output=line-search.qlog
 #SBATCH –job-name=line-search
 #SBATCH –export=ALL
