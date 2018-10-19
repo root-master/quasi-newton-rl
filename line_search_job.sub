@@ -3,7 +3,6 @@
 #SBATCH --mail-type=ALL
 #SBATCH -p appliedmath.q
 #SBATCH --qos=appliedmath.q
-## SBATCH --time=0-00:01:00
 #SBATCH -o line-search.qlog
 #SBATCH -J line-search
 #SBATCH --export=ALL
