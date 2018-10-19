@@ -8,7 +8,9 @@
 #SBATCH -job-name=line-search
 #SBATCH -export=ALL
 
-echo hey
+echo $(hostname)
+sleep 60
+
 # module load anaconda3
 # source activate jacobenv
 # declare -a m_vec=(40 20 80)
