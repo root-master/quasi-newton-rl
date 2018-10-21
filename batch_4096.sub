@@ -18,9 +18,9 @@ declare matrix="L-BFGS"
 
 for m in ${m_vec[@]}
 do
-		for task in ${tasks[@]}
-			do
-				echo $m - $b - $task
-				python main.py -task=$task -m=$m -batch=$b -method=$method -matrix=$matrix
-			done
+	for task in ${tasks[@]}
+		do
+			echo $m - $b - $task
+			python main.py -task=$task -m=$m -batch=$b -method=$method -matrix=$matrix
+		done
 done
