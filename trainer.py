@@ -170,7 +170,7 @@ class Trainer():
 			print('agent terminated, end of episode') 
 			r = min(-1.0,r)
 
-		if ('Pong' in task):
+		if ('Pong' in self.env.task):
 			if terminal and (self.episode_scores > 20):
 				task_done = True
 				done = 1
