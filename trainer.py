@@ -155,7 +155,7 @@ class Trainer():
 
 		if new_lives < old_lives:
 			print('agent died, current lives = ', new_lives)
-			r = min(-1.0, r)			
+			r = min(-1.0, r)
 
 		if (terminal and new_lives>0):
 			task_done = True
@@ -169,6 +169,16 @@ class Trainer():
 		if terminal and new_lives==0:
 			print('agent terminated, end of episode') 
 			r = min(-1.0,r)
+
+		if ('Pong' in task):
+			if terminal and (self.episode_scores > 20):
+				task_done = True
+				done = 1
+				r = max(1.0,r)
+				print('task is solved succesfully, end of episode')
+			else:
+				task_done = False
+				done = 0
 
 		if r < 0.0 or isclose(r, 0.0):
 			r = min(-0.01,r)
