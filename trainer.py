@@ -16,6 +16,7 @@ class Trainer():
 				 quasi_newton=None,
 				 batch_size=64,
 				 seed=None,
+				 max_iter = None,
 				 **kwargs):
 
 		self.env = env
@@ -49,7 +50,7 @@ class Trainer():
 		self.batch_size = batch_size
 		self.learning_starts = self.batch_size
 		self.learning_freq = self.batch_size
-		self.max_iter = 2000*1024
+		self.max_iter = 2000*1024 if max_iter is None else max_iter
 
 		self.test_duration = 0.0
 		self.there_was_a_test = False
@@ -171,7 +172,7 @@ class Trainer():
 			r = min(-1.0,r)
 
 		if ('Pong' in self.env.task):
-			if terminal and (self.episode_scores > 20):
+			if terminal and (self.episode_scores > 17):
 				task_done = True
 				done = 1
 				r = max(1.0,r)

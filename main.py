@@ -15,6 +15,8 @@ parser.add_argument('--task','-task', type=str, default='Breakout-v0', metavar='
                     help='choose an ATARI task to play')
 parser.add_argument('--m','-m', type=int, default=20, metavar='m',
                     help='Limited-memory quasi-Newton matrices memory size')
+parser.add_argument('--max-iter','-maxiter', type=int, default=2000*1024, metavar='max-iter',
+                    help='max steps for Deep RL algorithm')
 parser.add_argument('--search-method','-method', type=str, 
 					default='line-search', metavar='m',
 					choices=['line-search','trust-region'],
@@ -32,6 +34,7 @@ task = args.task
 batch_size = int(args.batch_size)
 search_method = args.search_method
 m = int(args.m)
+max_iter = int(args.max_iter)
 quasi_newton_matrix = args.quasi_newton_matrix
 
 from Environment import Environment
@@ -64,7 +67,8 @@ atari_trainer = Trainer(env=env,
 				 experience_memory=experience_memory,
 				 quasi_newton=lbfgs,
 				 batch_size=batch_size,
-				 seed=seed)
+				 seed=seed,
+				 max_iter=max_iter)
 
 # run the training loop
 atari_trainer.train()
