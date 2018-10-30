@@ -50,7 +50,8 @@ from agent import Controller
 controller = Controller(experience_memory=experience_memory,
 						num_actions=num_actions,
 						batch_size=batch_size,
-						seed=seed) 
+						seed=seed,
+						use_multiple_gpu=False) 
 
 # create quasi-Newton optimizier
 from quasi_newton import QUASI_NEWTON
