@@ -24,7 +24,7 @@ do
 		for task in ${tasks[@]}
 		do
 			echo $m - $b - $task
-			python main.py -task=$task -m=$m -batch=$b -method=$method -matrix=$matrix -maxiter=
+			python main.py -task=$task -m=$m -batch=$b -method=$method -matrix=$matrix -maxiter=$maxiter
 		done
 	done
 done
