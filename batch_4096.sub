@@ -10,11 +10,12 @@
 
 module load anaconda3
 source activate jacobenv
-declare -a m_vec=(160 80 40 20)
-declare -a batch_vec=(8192 4096)
+declare -a m_vec=(160 80 40)
+declare -a batch_vec=(16384 8192)
 declare -a tasks=("Pong-v0" "Seaquest-v0" "Enduro-v0" "Breakout-v0" "BeamRider-v0" "Qbert-v0" "SpaceInvaders-v0")
 declare method="line-search"
 declare matrix="L-BFGS"
+declare maxiter=10240000
 
 for m in ${m_vec[@]}
 do
@@ -23,7 +24,7 @@ do
 		for task in ${tasks[@]}
 		do
 			echo $m - $b - $task
-			python main.py -task=$task -m=$m -batch=$b -method=$method -matrix=$matrix
+			python main.py -task=$task -m=$m -batch=$b -method=$method -matrix=$matrix -maxiter=
 		done
 	done
 done
