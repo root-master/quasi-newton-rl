@@ -102,18 +102,11 @@ class Trainer():
 
 			if self.quasi_newton.termination_criterion:
 				print('Quasi-Newton termination criterion --> exit')
-				# self.save_results()
-				# self.save_model()
 				break
 
 			if t>0 and (self.step % self.controller_target_update_freq == 0):
 				self.controller.update_target_params()
 
-			# if t>0 and (self.step % self.save_model_freq == 0):
-			# 	self.save_model()
-
-			# if (t>0) and (self.step % self.save_results_freq == 0):
-			# 	self.save_results()
 		train_end_time = time.time()
 		self.total_train_time = train_end_time - train_start_time
 		self.save_results()
