@@ -52,7 +52,7 @@ class Controller():
 		self.gamma = 0.99
 		self.num_actions = num_actions
 		self.batch_size = batch_size
-		self,device_id = device_id
+		self.device_id = device_id
 		if seed is not None:
 			torch.manual_seed(seed)
 			torch.cuda.manual_seed(seed)
