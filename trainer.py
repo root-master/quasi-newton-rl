@@ -174,8 +174,8 @@ class Trainer():
 				task_done = False
 				done = 0
 
-		if r < 0.0 or isclose(r, 0.0):
-			r = min(-0.01,r)
+		# if r < 0.0 or isclose(r, 0.0):
+		# 	r = min(-0.01,r)
 
 		self.episode_rewards += r
 

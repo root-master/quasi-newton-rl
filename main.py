@@ -25,6 +25,10 @@ parser.add_argument('--quasi-newton-matrix','-matrix', type=str,
 					default='L-BFGS', metavar='m',
 					choices=['L-BFGS','L-SR1'],
                     help='Quasi-Newton matrix')
+parser.add_argument('--use-multiple-gpu','-use-multiple-gpu', action='store_true',default=False,
+        			help='Use all GPUs')
+parser.add_argument('--device-id','-cuda', type=int, default=0, metavar='gpu',
+                    help='cuda device id')
 
 
 args = parser.parse_args()
@@ -36,6 +40,11 @@ search_method = args.search_method
 m = int(args.m)
 max_iter = int(args.max_iter)
 quasi_newton_matrix = args.quasi_newton_matrix
+use_multiple_gpu = args.use_multiple_gpu
+if use_multiple_gpu:
+	device_id = 0
+else:
+	device_id = int(args.device_id)
 
 from Environment import Environment
 env = Environment(task=task,seed=seed) 
@@ -51,7 +60,8 @@ controller = Controller(experience_memory=experience_memory,
 						num_actions=num_actions,
 						batch_size=batch_size,
 						seed=seed,
-						use_multiple_gpu=False) 
+						use_multiple_gpu=use_multiple_gpu,
+						device_id=device_id) 
 
 # create quasi-Newton optimizier
 from quasi_newton import QUASI_NEWTON
@@ -74,4 +84,6 @@ atari_trainer = Trainer(env=env,
 # run the training loop
 atari_trainer.train()
 
+
+# python main.py -task='PongNoFrameskip-v4' -m=80 -batch=2048  -maxiter=10240000 -cuda=0
 

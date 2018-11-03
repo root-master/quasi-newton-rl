@@ -45,13 +45,14 @@ class Controller():
 				 gamma=0.99,
 				 num_actions=4,
 				 use_multiple_gpu=True,
+				 device_id=0,
 				 seed=None):
 		
 		self.experience_memory = experience_memory # expereince replay memory
 		self.gamma = 0.99
 		self.num_actions = num_actions
 		self.batch_size = batch_size
-
+		self,device_id = device_id
 		if seed is not None:
 			torch.manual_seed(seed)
 			torch.cuda.manual_seed(seed)
@@ -74,7 +75,7 @@ class Controller():
 		self.use_multiple_gpu = use_multiple_gpu
 		# BUILD MODEL 
 		if torch.cuda.is_available():
-			self.device = torch.device("cuda:0")
+			self.device = torch.device(device_id)
 		else:
 			self.device = torch.device("cpu")
 
@@ -109,8 +110,8 @@ class Controller():
 		Q_t = Q_t.to(self.device)
 
 		if torch.cuda.device_count() > 1 and self.use_multiple_gpu:
-			Q = nn.DataParallel(Q).to(self.device)
-			Q_t = nn.DataParallel(Q_t).to(self.device)
+			Q = nn.DataParallel(Q).to(torch.device("cuda:0"))
+			Q_t = nn.DataParallel(Q_t).to(torch.device("cuda:0"))
 
 		self.Q = Q
 		self.Q_t = Q_t
