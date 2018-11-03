@@ -5,13 +5,6 @@ parser = argparse.ArgumentParser(description='Quasi-Newton DQN feat. PyTorch')
 parser.add_argument('--batch-size','-batch', type=int, default=1024, metavar='b',
                     help='input batch size for training')
 parser.add_argument('--task','-task', type=str, default='Breakout-v0', metavar='T',
-                    choices=['Breakout-v0',
-                    		 'BeamRider-v0',
-                    		 'Enduro-v0',
-                    		 'Pong-v0',
-                    		 'Qbert-v0',
-                    		 'Seaquest-v0',
-                    		 'SpaceInvaders-v0'],
                     help='choose an ATARI task to play')
 parser.add_argument('--m','-m', type=int, default=20, metavar='m',
                     help='Limited-memory quasi-Newton matrices memory size')
