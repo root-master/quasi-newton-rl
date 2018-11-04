@@ -30,7 +30,7 @@ class DQN(nn.Module):
 		self.relu = nn.ReLU()
 
 	def forward(self, x):
-		'''forward path to the ntework'''
+		'''forward path to the network'''
 		x = self.relu(self.conv1(x))
 		x = self.relu(self.conv2(x))
 		x = self.relu(self.conv3(x))
@@ -79,6 +79,9 @@ class Controller():
 			self.device = torch.device(device_id)
 		else:
 			self.device = torch.device("cpu")
+
+		if self.use_multiple_gpu and torch.cuda.device_count() > 1:
+			self.device = torch.device("cuda:0")
 
 		dfloat_cpu = torch.FloatTensor
 		dfloat_gpu = torch.cuda.FloatTensor
@@ -263,7 +266,7 @@ class Controller():
 
 		# sending data to gpu
 		if torch.cuda.is_available():
-			with torch.cuda.device(0):
+			with torch.cuda.device(self.device):
 				x = x.to(self.device)
 				xp = xp.to(self.device)
 				actions = actions.to(self.device)
@@ -312,7 +315,7 @@ class Controller():
 		dones = torch.Tensor(dones).type(self.dtype)
 		# sending data to gpu
 		if torch.cuda.is_available():
-			with torch.cuda.device(0):
+			with torch.cuda.device(self.device):
 				x = torch.Tensor(x).to(self.device).type(self.dtype)
 				xp = torch.Tensor(xp).to(self.device).type(self.dtype)
 				actions = actions.to(self.device)
