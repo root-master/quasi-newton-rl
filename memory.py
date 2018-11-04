@@ -21,10 +21,10 @@ class ExperienceMemory():
 		for i in range(0,batch_size): # get O_{k}
 			e = self.memory[i]
 			state = e.s.reshape((1,)+e.s.shape).astype(np.uint8)
-			action = np.array(e.a,dtype=np.uint8)
-			reward = np.array(e.r,dtype=np.float32)
+			action = np.array([e.a],dtype=np.uint8)
+			reward = np.array([e.r],dtype=np.float32)
 			state_prime = e.sp.reshape((1,)+e.s.shape).astype(np.uint8)
-			done = np.array(e.done,dtype=np.uint8)
+			done = np.array([e.done],dtype=np.uint8)
 			if i == 0:
 				states = state
 				actions = action
