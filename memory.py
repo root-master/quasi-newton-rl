@@ -33,10 +33,10 @@ class ExperienceMemory():
 				dones = done
 			else:
 				states = np.concatenate((states,state),axis=0)
-				actions = np.concatenate((actions,action),axis=0)
-				rewards = np.concatenate((rewards,reward),axis=0)
+				actions = np.concatenate((actions,action))
+				rewards = np.concatenate((rewards,reward))
 				state_primes = np.concatenate((state_primes,state_prime),axis=0)
-				dones = np.concatenate((dones,done),axis=0)
+				dones = np.concatenate((dones,done))
 
 		return states, actions, rewards, state_primes, dones	
 
