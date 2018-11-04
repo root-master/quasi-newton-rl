@@ -309,19 +309,23 @@ class Controller():
 		# 	param.requires_grad = False
 		states, actions, rewards, state_primes, dones = \
 			self.experience_memory.sample(batch_size=self.batch_size)
-		x = torch.Tensor(states)	
-		xp = torch.Tensor(state_primes)
+		x = torch.Tensor(states).type(self.dtype)
+		xp = torch.Tensor(state_primes).type(self.dtype)
 		actions = torch.Tensor(actions).type(self.dlongtype)
 		rewards = torch.Tensor(rewards).type(self.dtype)
 		dones = torch.Tensor(dones).type(self.dtype)
+
+		# rewards = rewards.clamp(-1, 1)
+
 		# sending data to gpu
 		if torch.cuda.is_available():
 			with torch.cuda.device(self.device_id):
-				x = torch.Tensor(x).to(self.device).type(self.dtype)
-				xp = torch.Tensor(xp).to(self.device).type(self.dtype)
+				x = x.to(self.device)
+				xp = xp.to(self.device)
 				actions = actions.to(self.device)
 				rewards = rewards.to(self.device)
 				dones = dones.to(self.device)
+
 		# forward path
 		q = self.Q.forward(x/255.0)
 		q = q.gather(1, actions.unsqueeze(1))
