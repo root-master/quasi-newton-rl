@@ -81,6 +81,7 @@ class Controller():
 			self.device = torch.device("cpu")
 
 		if self.use_multiple_gpu and torch.cuda.device_count() > 1:
+			self.device_id = 0
 			self.device = torch.device("cuda:0")
 
 		dfloat_cpu = torch.FloatTensor
@@ -266,7 +267,7 @@ class Controller():
 
 		# sending data to gpu
 		if torch.cuda.is_available():
-			with torch.device(self.device):
+			with torch.cuda.device(self.device_id):
 				x = x.to(self.device)
 				xp = xp.to(self.device)
 				actions = actions.to(self.device)
@@ -315,7 +316,7 @@ class Controller():
 		dones = torch.Tensor(dones).type(self.dtype)
 		# sending data to gpu
 		if torch.cuda.is_available():
-			with torch.device(self.device):
+			with torch.cuda.device(self.device_id)::
 				x = torch.Tensor(x).to(self.device).type(self.dtype)
 				xp = torch.Tensor(xp).to(self.device).type(self.dtype)
 				actions = actions.to(self.device)
