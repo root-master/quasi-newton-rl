@@ -129,7 +129,7 @@ class Controller():
 	def compute_Q(self,s):
 		self.Q.eval()
 		with torch.no_grad():
-			x = s.reshape((1,4,84,84))
+			x = s.reshape((1,) + s.shape)
 			x = torch.Tensor(x).type(self.dtype)
 			q = self.Q.forward(x/255.0)
 		q_np = q.cpu().detach().numpy()

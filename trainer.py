@@ -84,7 +84,7 @@ class Trainer():
 		print('game episode: ', self.game_episode, 'time step: ', self.step)
 		self.episode_start_time = time.time()
 		S = self.env.reset()
-		self.s = self.four_frames_to_4_84_84(S)
+		self.s = self.preprocess_concat_frames(S)
 		for t in range(self.learning_starts): # fill initial expereince memory 
 			self.play()
 			self.step += 1
@@ -145,7 +145,7 @@ class Trainer():
 		SP, r, terminal, step_info = self.env.step(a)
 		new_lives = self.env.lives()
 		self.episode_scores += r
-		sp = self.four_frames_to_4_84_84(SP)
+		sp = self.preprocess_concat_frames(SP)
 
 		if new_lives < old_lives:
 			print('agent died, current lives = ', new_lives)
@@ -204,7 +204,7 @@ class Trainer():
 			self.episode_scores = 0.0				
 			self.episode_start_time = time.time()
 			S = self.env.reset() # reset S
-			self.s = self.four_frames_to_4_84_84(S)
+			self.s = self.preprocess_concat_frames(S)
 
 	def test(self):
 		self.there_was_a_test = True
@@ -220,7 +220,7 @@ class Trainer():
 
 	def test_one_epsiode(self):
 		S = self.testing_env.reset()
-		s = self.four_frames_to_4_84_84(S) 
+		s = self.preprocess_concat_frames(S) 
 		for t in range(self.max_steps_testing):
 			# self.testing_env.render()
 			a = self.epsilon_greedy_testing(s)
@@ -228,7 +228,7 @@ class Trainer():
 			SP, r, terminal, step_info = self.testing_env.step(a)
 			new_lives = self.testing_env.lives()
 			self.total_score_testing += r
-			sp = self.four_frames_to_4_84_84(SP)
+			sp = self.preprocess_concat_frames(SP)
 
 			if new_lives < old_lives:
 				print('agent died, current lives = ', new_lives)
@@ -261,39 +261,62 @@ class Trainer():
 		else:
 			return self.controller.get_best_action(s)
 
-	def four_frames_to_4_84_84(self,S):	
-		crop_top = 0
-		crop_bottom = 0
-		if 'Breakout' in self.env.task:
-			crop_top = 14
-			crop_bottom = 0
-		if 'BeamRider' in self.env.task:
-			crop_top = 20
-			crop_bottom = 0
-		if 'Enduro' in self.env.task:
-			crop_top = 30
-			crop_bottom = 40
-		if 'Pong' in self.env.task:
-			crop_top = 14
-			crop_bottom = 5
-		if 'Qbert' in self.env.task:
-			crop_top = 0
-			crop_bottom = 0
-		if 'Seaquest' in self.env.task:
-			crop_top = 20
-			crop_bottom = 20
-		if 'SpaceInvaders' in self.env.task:
-			crop_top = 10
-			crop_bottom = 6
-		w = 84
-		h = crop_top + 84 + crop_bottom	
+	def to_grayscale(self,img):
+		return np.mean(img, axis=2).astype(np.uint8)
+
+	def downsample(self,img):
+		return img[::2, ::2]
+
+	def resize(self,img):
+		w = img.shape[0]
+		h = img.shape[1]
+		return img.reshape((1,w,h))
+
+	def preprocess(self,img):
+		return self.resize(self.to_grayscale(self.downsample(img)))
+
+	def preprocess_concat_frames(self,S):	
 		for i, img in enumerate(S):
-			gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-			gray_resized = cv2.resize(gray,(w,h))
-			gray_cropped =  gray_resized[crop_top:h-crop_bottom,:]
-			gray_reshaped = gray_cropped.reshape((1,84,84))
+			img_preprocessed = self.preprocess(img)
 			if i == 0:
-				s = gray_reshaped
+				s = img_preprocessed
 			else:
-				s = np.concatenate((s,gray_reshaped),axis=0)
+				s = np.concatenate((s,img_preprocessed),axis=0)
 		return s
+
+	# def preprocess_concat_frames(self,S):	
+	# 	crop_top = 0
+	# 	crop_bottom = 0
+	# 	if 'Breakout' in self.env.task:
+	# 		crop_top = 14
+	# 		crop_bottom = 0
+	# 	if 'BeamRider' in self.env.task:
+	# 		crop_top = 20
+	# 		crop_bottom = 0
+	# 	if 'Enduro' in self.env.task:
+	# 		crop_top = 30
+	# 		crop_bottom = 40
+	# 	if 'Pong' in self.env.task:
+	# 		crop_top = 14
+	# 		crop_bottom = 5
+	# 	if 'Qbert' in self.env.task:
+	# 		crop_top = 0
+	# 		crop_bottom = 0
+	# 	if 'Seaquest' in self.env.task:
+	# 		crop_top = 20
+	# 		crop_bottom = 20
+	# 	if 'SpaceInvaders' in self.env.task:
+	# 		crop_top = 10
+	# 		crop_bottom = 6
+	# 	w = 84
+	# 	h = crop_top + 84 + crop_bottom	
+	# 	for i, img in enumerate(S):
+	# 		gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+	# 		gray_resized = cv2.resize(gray,(w,h))
+	# 		gray_cropped =  gray_resized[crop_top:h-crop_bottom,:]
+	# 		gray_reshaped = gray_cropped.reshape((1,84,84))
+	# 		if i == 0:
+	# 			s = gray_reshaped
+	# 		else:
+	# 			s = np.concatenate((s,gray_reshaped),axis=0)
+	# 	return s
