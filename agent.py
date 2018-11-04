@@ -316,7 +316,7 @@ class Controller():
 		dones = torch.Tensor(dones).type(self.dtype)
 		# sending data to gpu
 		if torch.cuda.is_available():
-			with torch.cuda.device(self.device_id)::
+			with torch.cuda.device(self.device_id):
 				x = torch.Tensor(x).to(self.device).type(self.dtype)
 				xp = torch.Tensor(xp).to(self.device).type(self.dtype)
 				actions = actions.to(self.device)
