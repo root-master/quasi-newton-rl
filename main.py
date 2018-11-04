@@ -78,5 +78,5 @@ atari_trainer = Trainer(env=env,
 atari_trainer.train()
 
 
-# run main.py -task='PongDeterministic-v4' -m=80 -batch=2048  -maxiter=10240000 -cuda=0
+# run main.py -task='Pong-v0' -m=80 -batch=2048  -maxiter=10240000 -cuda=1
 

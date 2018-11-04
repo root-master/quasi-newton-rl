@@ -266,7 +266,7 @@ class Controller():
 
 		# sending data to gpu
 		if torch.cuda.is_available():
-			with torch.cuda.device(self.device):
+			with torch.device(self.device):
 				x = x.to(self.device)
 				xp = xp.to(self.device)
 				actions = actions.to(self.device)
