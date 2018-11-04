@@ -18,19 +18,26 @@ class ExperienceMemory():
 			self.memory.append(*experience)
 
 	def sample(self,batch_size=32):
-		states = np.empty([batch_size,4,84,84], dtype=np.uint8)
-		actions = np.empty([batch_size], dtype=np.uint8)
-		rewards = np.empty([batch_size], dtype=np.float32)
-		dones = np.empty([batch_size], dtype=np.uint8)
-		state_primes = np.empty([batch_size,4,84,84], dtype=np.uint8)
-
 		for i in range(0,batch_size): # get O_{k}
 			e = self.memory[i]
-			states[i,:,:,:] = e.s
-			actions[i] = e.a
-			rewards[i] = e.r
-			state_primes[i] = e.sp
-			dones[i] = e.done
+			state = e.s.reshape((1,)+e.s.shape).astype(np.uint8)
+			action = np.array(e.a,dtype=np.uint8)
+			reward = np.array(e.r,dtype=np.float32)
+			state_prime = e.sp.reshape((1,)+e.s.shape).astype(np.uint8)
+			done = np.array(e.done,dtype=np.uint8)
+			if i == 0:
+				states = state
+				actions = action
+				rewards = reward
+				state_primes = state_prime
+				dones = done
+			else:
+				states = states.append(state,axis=0)
+				actions = actions.append(action,axis=0)
+				rewards = rewards.append(reward,axis=0)
+				state_primes = state_primes.append(state_prime,axis=0)
+				dones = dones.append(done,axis=0)
+
 		return states, actions, rewards, state_primes, dones	
 
 	def __len__(self):
