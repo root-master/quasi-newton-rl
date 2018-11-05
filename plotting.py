@@ -12,6 +12,7 @@ memory_list = [20,40,80]
 results_folder = './results/'
 for m in memory_list: 
 	for b in batch_list:
+		print('-'*60)
 		print('L-BFGS memory = ', m)
 		print('batch size = ', b)
 		for task in tasks:
@@ -24,7 +25,7 @@ for m in memory_list:
 				minute = int( (A[5] - 3600 * hour)/60.0)
 				print('time = ', hour, 'hours and ',minute, 'minutes')
 
-
+print('-'*60)
 for task in tasks:
 	max_score = -float('Inf')
 	for m in memory_list: 
@@ -41,22 +42,22 @@ for task in tasks:
 	print('max score for ',task,' = ',max_score)
 	print('time = ', hour, 'hours and ',minute, 'minutes')
 
-batch_list = [8192]
-memory_list = [160]
-results_folder = './results/'
-for m in memory_list: 
-	for b in batch_list:
-		print('L-BFGS memory = ', m)
-		print('batch size = ', b)
-		for task in tasks:
-			file_name = 'task_' + task + '_search_line-search_matrix_L-BFGS_memory_' + str(m) + '_batch_' + str(b) + '.pkl'
-			file_path = results_folder + file_name
-			with open(file_path, 'rb') as f:
-				A = pickle.load(f)
-				print('max score for ',task,' = ',max(max(A[1]),max(A[4])))
-				hour = int(A[5]/3600.0)
-				minute = int( (A[5] - 3600 * hour)/60.0)
-				print('time = ', hour, 'hours and ',minute, 'minutes')
+# batch_list = [8192]
+# memory_list = [160]
+# results_folder = './results/'
+# for m in memory_list: 
+# 	for b in batch_list:
+# 		print('L-BFGS memory = ', m)
+# 		print('batch size = ', b)
+# 		for task in tasks:
+# 			file_name = 'task_' + task + '_search_line-search_matrix_L-BFGS_memory_' + str(m) + '_batch_' + str(b) + '.pkl'
+# 			file_path = results_folder + file_name
+# 			with open(file_path, 'rb') as f:
+# 				A = pickle.load(f)
+# 				print('max score for ',task,' = ',max(max(A[1]),max(A[4])))
+# 				hour = int(A[5]/3600.0)
+# 				minute = int( (A[5] - 3600 * hour)/60.0)
+# 				print('time = ', hour, 'hours and ',minute, 'minutes')
 
 
 # import pickle
