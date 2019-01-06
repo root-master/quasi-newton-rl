@@ -58,7 +58,7 @@ controller = Controller(experience_memory=experience_memory,
 
 # create quasi-Newton optimizier
 from quasi_newton import QUASI_NEWTON
-lbfgs = QUASI_NEWTON(controller=controller, 
+qn = QUASI_NEWTON(controller=controller, 
 					 m=m,
 					 search_method=search_method,
 					 quasi_newton_matrix=quasi_newton_matrix,
@@ -69,7 +69,7 @@ from trainer import Trainer
 atari_trainer = Trainer(env=env,
 				 controller=controller,
 				 experience_memory=experience_memory,
-				 quasi_newton=lbfgs,
+				 quasi_newton=qn,
 				 batch_size=batch_size,
 				 seed=seed,
 				 max_iter=max_iter)
