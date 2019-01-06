@@ -2,13 +2,13 @@ import argparse
 import time
 
 parser = argparse.ArgumentParser(description='Quasi-Newton DQN feat. PyTorch')
-parser.add_argument('--batch-size','-batch', type=int, default=1024, metavar='b',
+parser.add_argument('--batch-size','-batch', type=int, default=2084, metavar='b',
                     help='input batch size for training')
 parser.add_argument('--task','-task', type=str, default='Breakout-v0', metavar='T',
                     help='choose an ATARI task to play')
-parser.add_argument('--m','-m', type=int, default=20, metavar='m',
+parser.add_argument('--m','-m', type=int, default=80, metavar='m',
                     help='Limited-memory quasi-Newton matrices memory size')
-parser.add_argument('--max-iter','-maxiter', type=int, default=2000*1024, metavar='max-iter',
+parser.add_argument('--max-iter','-maxiter', type=int, default=10000*1024, metavar='max-iter',
                     help='max steps for Deep RL algorithm')
 parser.add_argument('--search-method','-method', type=str, 
 					default='line-search', metavar='m',
@@ -16,7 +16,7 @@ parser.add_argument('--search-method','-method', type=str,
                     help='Quasi-Newton search method')
 parser.add_argument('--quasi-newton-matrix','-matrix', type=str, 
 					default='L-BFGS', metavar='m',
-					choices=['L-BFGS','L-SR1'],
+					choices=['L-BFGS','BFGS','L-SR1'],
                     help='Quasi-Newton matrix')
 parser.add_argument('--use-multiple-gpu','-use-multiple-gpu', action='store_true',default=False,
         			help='Use all GPUs')

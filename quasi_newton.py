@@ -42,6 +42,7 @@ class QUASI_NEWTON():
 		self.loss_list = []
 		self.grad_norm_list = []
 		self.computations_time_list = []
+		self.overlap_loss_list = []
 
 		self.S = np.array([[]])
 		self.Y = np.array([[]])
@@ -81,6 +82,7 @@ class QUASI_NEWTON():
 		self.Lk = self.controller.convert_Lk_Jk_to_np()
 
 		self.loss_list.append(float(self.Lk))
+		self.overlap_loss_list.append(float(self.Lk_Ok))
 		self.grad_norm_list.append(norm(self.gk))
 		self.termination_criterion = norm(self.gk) < self.min_grad
 
@@ -91,7 +93,7 @@ class QUASI_NEWTON():
 			self.pk = - self.gk # in first iteration we take the gradient decent step
 		else:
 			if self.search_direction_compute_method == 'two-loop' \
-					   and self.quasi_newton_matrix == 'L-BFGS':
+					   and (self.quasi_newton_matrix in ['L-BFGS','BFGS']):
 				self.run_lbfgs_two_loop_recursion()
 
 		if self.condition_method == 'Wolfe':
@@ -219,7 +221,7 @@ class QUASI_NEWTON():
 			self.Y = self.yk.reshape(-1,1)
 			return
 
-		if self.S.shape[1] == self.m: 
+		if self.S.shape[1] == self.m and (self.quasi_newton_matrix in ['L-BFGS','L-SR1']): 
 			self.S = np.delete(self.S, obj=0, axis=1)
 			self.Y = np.delete(self.Y, obj=0, axis=1)
 

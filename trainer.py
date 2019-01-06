@@ -50,7 +50,7 @@ class Trainer():
 		self.batch_size = batch_size
 		self.learning_starts = self.batch_size
 		self.learning_freq = self.batch_size
-		self.max_iter = 2000*1024 if max_iter is None else max_iter
+		self.max_iter = 10000*1024 if max_iter is None else max_iter
 
 		self.test_duration = 0.0
 		self.there_was_a_test = False
