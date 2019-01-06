@@ -2,6 +2,7 @@
 #SBATCH --mail-user=jrafatiheravi@ucmerced.edu
 #SBATCH --mail-type=ALL
 #SBATCH -p appliedmath.q
+#SBATCH --nodelist=mrcdg06
 #SBATCH -o bfgs-line-search.qlog
 #SBATCH -J bfgs-line-search
 #SBATCH --export=ALL
