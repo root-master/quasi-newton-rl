@@ -113,7 +113,7 @@ class QUASI_NEWTON():
 			self.update_S_Y()
 			self.gamma = (self.sk @ self.yk) / (self.yk @ self.yk)
 			print('gamma before bound = {0:.4f}' .format(self.gamma))
-			self.gamma = min(500.0, self.gamma) # upper bound
+			self.gamma = min(1000.0, self.gamma) # upper bound
 			self.gamma = max(1.0,   self.gamma) # lower bound
 			print('gamma after  bound = {0:.4f}' .format(self.gamma))
 		else:
