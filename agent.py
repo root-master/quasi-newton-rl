@@ -339,11 +339,11 @@ class Controller():
 		q_t_p1 = q_t_p1.squeeze()
 		target = rewards + self.gamma * (1 - dones) * q_t_p1
 		self.zero_grad()
-		error = target - q
-		error = error.clamp(-1, 1)
-		self.loss = 0.5 * torch.mean( error.pow(2) )
-		# self.loss_fn = nn.SmoothL1Loss()
-		# self.loss = self.loss_fn(q, target)
+		# error = target - q
+		# error = error.clamp(-1, 1)
+		# self.loss = 0.5 * torch.mean( error.pow(2) )
+		self.loss_fn = nn.SmoothL1Loss()
+		self.loss = self.loss_fn(q, target)
 		self.L = self.loss.data # compute loss
 
 	def update_target_params(self):
