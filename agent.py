@@ -22,8 +22,8 @@ class DQN(nn.Module):
 		# third convolutional layer
 		self.conv3 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, stride=1)
 		# fully connected layer #1 (4th layer)
-		# self.fc1 = nn.Linear(in_features=7*7*64, out_features=512)
-		self.fc1 = nn.Linear(in_features=9*6*64, out_features=512)
+		self.fc1 = nn.Linear(in_features=7*7*64, out_features=512)
+		# self.fc1 = nn.Linear(in_features=9*6*64, out_features=512)
 		# fully connected layer #2 (5th layer)
 		self.fc2 = nn.Linear(in_features=512, out_features=num_actions)
 

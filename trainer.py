@@ -275,48 +275,48 @@ class Trainer():
 	def preprocess(self,img):
 		return self.resize(self.to_grayscale(self.downsample(img)))
 
-	def preprocess_concat_frames(self,S):	
-		for i, img in enumerate(S):
-			img_preprocessed = self.preprocess(img)
-			if i == 0:
-				s = img_preprocessed
-			else:
-				s = np.concatenate((s,img_preprocessed),axis=0)
-		return s
-
 	# def preprocess_concat_frames(self,S):	
-	# 	crop_top = 0
-	# 	crop_bottom = 0
-	# 	if 'Breakout' in self.env.task:
-	# 		crop_top = 14
-	# 		crop_bottom = 0
-	# 	if 'BeamRider' in self.env.task:
-	# 		crop_top = 20
-	# 		crop_bottom = 0
-	# 	if 'Enduro' in self.env.task:
-	# 		crop_top = 30
-	# 		crop_bottom = 40
-	# 	if 'Pong' in self.env.task:
-	# 		crop_top = 14
-	# 		crop_bottom = 5
-	# 	if 'Qbert' in self.env.task:
-	# 		crop_top = 0
-	# 		crop_bottom = 0
-	# 	if 'Seaquest' in self.env.task:
-	# 		crop_top = 20
-	# 		crop_bottom = 20
-	# 	if 'SpaceInvaders' in self.env.task:
-	# 		crop_top = 10
-	# 		crop_bottom = 6
-	# 	w = 84
-	# 	h = crop_top + 84 + crop_bottom	
 	# 	for i, img in enumerate(S):
-	# 		gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-	# 		gray_resized = cv2.resize(gray,(w,h))
-	# 		gray_cropped =  gray_resized[crop_top:h-crop_bottom,:]
-	# 		gray_reshaped = gray_cropped.reshape((1,84,84))
+	# 		img_preprocessed = self.preprocess(img)
 	# 		if i == 0:
-	# 			s = gray_reshaped
+	# 			s = img_preprocessed
 	# 		else:
-	# 			s = np.concatenate((s,gray_reshaped),axis=0)
+	# 			s = np.concatenate((s,img_preprocessed),axis=0)
 	# 	return s
+
+	def preprocess_concat_frames(self,S):
+		crop_top = 0
+		crop_bottom = 0
+		if 'Breakout' in self.env.task:
+			crop_top = 14
+			crop_bottom = 0
+		if 'BeamRider' in self.env.task:
+			crop_top = 20
+			crop_bottom = 0
+		if 'Enduro' in self.env.task:
+			crop_top = 30
+			crop_bottom = 40
+		if 'Pong' in self.env.task:
+			crop_top = 14
+			crop_bottom = 5
+		if 'Qbert' in self.env.task:
+			crop_top = 0
+			crop_bottom = 0
+		if 'Seaquest' in self.env.task:
+			crop_top = 20
+			crop_bottom = 20
+		if 'SpaceInvaders' in self.env.task:
+			crop_top = 10
+			crop_bottom = 6
+		w = 84
+		h = crop_top + 84 + crop_bottom	
+		for i, img in enumerate(S):
+			gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+			gray_resized = cv2.resize(gray,(w,h))
+			gray_cropped =  gray_resized[crop_top:h-crop_bottom,:]
+			gray_reshaped = gray_cropped.reshape((1,84,84))
+			if i == 0:
+				s = gray_reshaped
+			else:
+				s = np.concatenate((s,gray_reshaped),axis=0)
+		return s
