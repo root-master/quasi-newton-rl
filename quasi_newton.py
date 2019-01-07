@@ -186,6 +186,7 @@ class QUASI_NEWTON():
 
 			self.alpha = self.alpha * rho_ls
 			trial += 1
+		return
 
 	def satisfy_Armijo_condition(self):
 		print('finding step length via running Armijo Condition')
@@ -214,6 +215,7 @@ class QUASI_NEWTON():
 				break
 
 			self.alpha = self.alpha * rho_ls
+		return
 
 	def update_S_Y(self):
 		if self.S.size == 0:
@@ -227,6 +229,7 @@ class QUASI_NEWTON():
 
 		self.S = np.concatenate((self.S,self.sk.reshape(-1,1)), axis=1)
 		self.Y = np.concatenate((self.Y,self.yk.reshape(-1,1)), axis=1)
+		return
 
 	def run_lbfgs_two_loop_recursion(self):
 		print('running two loop recursion')
