@@ -8,7 +8,7 @@ parser.add_argument('--task','-task', type=str, default='Breakout-v0', metavar='
                     help='choose an ATARI task to play')
 parser.add_argument('--m','-m', type=int, default=80, metavar='m',
                     help='Limited-memory quasi-Newton matrices memory size')
-parser.add_argument('--max-iter','-maxiter', type=int, default=10000*1024, metavar='max-iter',
+parser.add_argument('--max-iter','-maxiter', type=int, default=2000*1024, metavar='max-iter',
                     help='max steps for Deep RL algorithm')
 parser.add_argument('--search-method','-method', type=str, 
 					default='line-search', metavar='m',
