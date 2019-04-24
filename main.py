@@ -78,5 +78,5 @@ atari_trainer = Trainer(env=env,
 atari_trainer.train()
 
 
-# run main.py -task='Pong-v0' -m=80 -batch=1024  -maxiter=10240000 -cuda=1
+# run main.py -task='Breakout-v0' -m=80 -batch=100 -method='trust-region'
 
